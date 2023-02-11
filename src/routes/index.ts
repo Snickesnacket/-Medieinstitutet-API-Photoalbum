@@ -13,9 +13,9 @@ router.get('/', (req, res) => {
 	})
 })
 
-/**
- * [EXAMPLE] /resource
- */
-// router.use('/resource', resource)
+
+router.use('/users', userRouter)
+router.use('/album', userRouter)
+router.use('/photos', userRouter)
 
 export default router
