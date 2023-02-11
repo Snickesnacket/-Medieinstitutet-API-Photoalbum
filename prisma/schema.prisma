@@ -8,10 +8,11 @@ datasource db {
 }
 
 model Album {
-  id     Int     @id @default(autoincrement()) @db.UnsignedInt
-  title  String
-  photos Photo[]
-  user   User[]
+  id      Int     @id @default(autoincrement()) @db.UnsignedInt
+  title   String
+  photos  Photo[]
+  user    User    @relation(fields: [user_id], references: [id])
+  user_id Int     @db.UnsignedInt
 }
 
 model Photo {
@@ -20,7 +21,8 @@ model Photo {
   url     String
   comment String
   albums  Album[]
-  user    User[]
+  user    User    @relation(fields: [user_id], references: [id])
+  user_id Int     @db.UnsignedInt
 }
 
 model User {
