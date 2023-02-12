@@ -1,8 +1,4 @@
-/**
- * Router Template
- */
 import express from 'express'
-import { body } from 'express-validator'
 import { index, show, store, update, destroy } from '../controllers/_controller'
 const router = express.Router()
 
@@ -19,12 +15,12 @@ router.get('/:resourceId', show)
 /**
  * POST /resource
  */
-router.post('/', [], store)
+router.post('/', store)
 
 /**
  * PATCH /resource/:resourceId
  */
-router.patch('/:resourceId', [], update)
+router.patch('/:resourceId', update)
 
 /**
  * DELETE /resource/:resourceId

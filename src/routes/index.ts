@@ -1,10 +1,11 @@
 import express from "express"
-import user from "./User"
-import albums from "./albums"
-import photos from "./photos"
-import { register } from '../controllers/register_controller'
+import authors from './authors'
+import books from './books'
+import profile from './profile'
+import publishers from './publishers'
+import { login, refresh, register } from '../controllers/user_controller'
+import { validateToken } from '../middlewares/auth/jwt'
 import { createUserRules } from '../validations/user_rules'
-
 
 // instantiate a new router
 const router = express.Router()
@@ -19,13 +20,38 @@ router.get('/', (req, res) => {
 })
 
 /**
- * register new user 
- * @todo validate incoming data and bail if validation fails
+ * /authors
  */
+router.use('/authors', authors)
 
+/**
+ * /books
+ */
+router.use('/books', books)
+
+/**
+ * /profile
+ */
+router.use('/profile', validateToken, profile)
+
+/**
+ * /publishers
+ */
+router.use('/publishers', publishers)
+
+/**
+ * POST /login
+ */
+router.post('/login', login)
+
+/**
+ * POST /refresh
+ */
+router.post('/refresh', refresh)
+
+/**
+ * POST /register
+ */
 router.post('/register', createUserRules, register)
-router.use('/users', user)
-router.use('/albums', albums)
-router.use('/photos', photos)
 
 export default router

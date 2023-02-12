@@ -1,7 +1,7 @@
 import express from 'express'
 import { body } from 'express-validator'
 import { index, show, store, update, } from '../controllers/photo_controller'
-import user from "./User"
+import user from "./users"
 const router = express.Router()
 
 
@@ -17,7 +17,7 @@ router.get('/:userId/albums/albumId/photos', index)
 router.get('/:userId/albums/albumId/photos/photoId', show)
 
 /**
- * POST /post a new photo to an album 
+ * POST /post a new photo to an album
  */
 router.post('/:userId/albums/albumId/photos/photoId', [], store)
 
