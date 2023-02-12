@@ -40,8 +40,10 @@ export const login = async (req: Request, res: Response) => {
 	// construct jwt-payload
 	const payload: JwtPayload = {
 		sub: user.id,     // sub = subject the token is issued for
-		name: user.name,
 		email: user.email,
+		password: user.password,
+		first_name: user.first_name,
+		last_name: user.last_name,
 	}
 
 	// sign payload with access-token secret and get access-token
@@ -103,9 +105,11 @@ export const register = async (req: Request, res: Response) => {
 	// Store the user in the database
 	try {
 		const user = await createUser({
-			name: validatedData.name,
+			id: req.body.id,
 			email: validatedData.email,
 			password: validatedData.password,
+			first_name: validatedData.first_name,
+			last_name: validatedData.last_name,
 		})
 
 		// Respond with 201 Created + status success

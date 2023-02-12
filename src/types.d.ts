@@ -20,26 +20,26 @@ export type CreatePhotoData = {
 }
 
 export type CreateUserData = {
-	id: Int,
-	email: String,
-	password: String,
-	first_name: String,
-	last_name: String,
-	albums?: Album[],
-	photos?: Photo[]
+	id: int,
+	email: string,
+	password: string,
+	first_name: string,
+	last_name: string,
 }
 
 export type UpdateUserData = {
-	first_name?: String,
-	last_name?: String,
+	first_name?: string,
+	last_name?: string,
 	email?: string,
 	password?: string,
 }
 
 export type JwtPayload = {
 	sub: number,
-	name: string,
 	email: string,
+	password: string,
+	first_name: string,
+	last_name: string,
 	iat?: number,
 	exp?: number,
 }

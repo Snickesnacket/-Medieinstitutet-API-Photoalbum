@@ -7,7 +7,7 @@ import { CreateUserData, UpdateUserData } from '../types'
 /**
  * Get a user by email
  *
- * @param email The email of the user to get
+ * @param id of the user  of the user to get
  */
 export const getUserByEmail = async (email: string) => {
 	return await prisma.user.findUnique({
