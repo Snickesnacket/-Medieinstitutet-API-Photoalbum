@@ -1,8 +1,9 @@
 import express from "express"
-import resource from './_router'
-import userRouter from "./User"
-import albumsRouter from "./albums"
-import photosRouter from "./photos"
+import user from "./User"
+import albums from "./albums"
+import photos from "./photos"
+import { body } from 'express-validator'
+import { register } from '../controllers/register_controller'
 
 
 // instantiate a new router
@@ -17,9 +18,9 @@ router.get('/', (req, res) => {
 	})
 })
 
-router.use('/users/:register', userRouter)
-router.use('/users', userRouter)
-router.use('/albums', albumsRouter)
-router.use('/photos', photosRouter)
+router.post('/register', register)
+router.use('/users', user)
+router.use('/albums', albums)
+router.use('/photos', photos)
 
 export default router
