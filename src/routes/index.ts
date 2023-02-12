@@ -1,8 +1,8 @@
 import express from "express"
-import authors from './authors'
-import books from './books'
 import profile from './profile'
-import publishers from './publishers'
+import albums from './albums'
+import photos from './photos'
+import unsers from './users'
 import { login, refresh, register } from '../controllers/user_controller'
 import { validateToken } from '../middlewares/auth/jwt'
 import { createUserRules } from '../validations/user_rules'
@@ -22,22 +22,18 @@ router.get('/', (req, res) => {
 /**
  * /authors
  */
-router.use('/authors', authors)
+router.use('/photos', photos)
 
 /**
  * /books
  */
-router.use('/books', books)
+router.use('/albums', albums)
 
 /**
  * /profile
  */
 router.use('/profile', validateToken, profile)
 
-/**
- * /publishers
- */
-router.use('/publishers', publishers)
 
 /**
  * POST /login

@@ -72,13 +72,55 @@ export const store = async (req: Request, res: Response) => {
 }
 
 /**
- * Update a book
+ * add photo to album 
  */
-export const update = async (req: Request, res: Response) => {
+export const addphoto = async (req: Request, res: Response) => {
+	try {
+		const result = await prisma.album.update({
+			where: {
+				id: Number(req.params.albumId),
+			},
+			data: {
+				photos: {
+					connect: {
+						id: req.body.photosId,
+					}
+				}
+			},
+			include: {
+				photos: true,
+			}
+		})
+		res.send({
+			status: "success",
+			data: result,
+		})
+	} catch (err) {
+		debug("Error thrown when creating a album %o: %o", req.body, err)
+		res.status(500).send({ status: "error", message: "Something went wrong" })
+	}
+
 }
 
+
 /**
- * Delete a book
+ * Patch albums/ albumsId
  */
-export const destroy = async (req: Request, res: Response) => {
+
+export const update = async (req: Request, res: Response) => {
+	const albumsId = Number(req.params.albumsId)
+
+	try {
+		const album = await prisma.album.update({
+			where: {
+				id: albumsId,
+			},
+			data:
+				req.body,
+		})
+		return res.send(album)
+	} catch (err) {
+		return res.status(500).send({ message: "Something went wrong" })
+	}
 }
+
