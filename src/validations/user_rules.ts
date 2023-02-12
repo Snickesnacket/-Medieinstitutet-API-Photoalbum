@@ -20,5 +20,4 @@ export const createUserRules = [
 			return Promise.reject("Email already exists")
 		}
 	}),
-	body('password').optional().isString().bail().isLength({ min: 6 }), */
-]
+	body('password').optional().isString().bail().isLength({ min: 6 }),] */

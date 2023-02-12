@@ -2,8 +2,8 @@ import express from "express"
 import user from "./User"
 import albums from "./albums"
 import photos from "./photos"
-import { body } from 'express-validator'
 import { register } from '../controllers/register_controller'
+import { createUserRules } from '../validations/user_rules'
 
 
 // instantiate a new router
@@ -18,7 +18,12 @@ router.get('/', (req, res) => {
 	})
 })
 
-router.post('/register', register)
+/**
+ * register new user 
+ * @todo validate incoming data and bail if validation fails
+ */
+
+router.post('/register', createUserRules, register)
 router.use('/users', user)
 router.use('/albums', albums)
 router.use('/photos', photos)
