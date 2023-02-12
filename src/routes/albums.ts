@@ -1,6 +1,7 @@
 import express from 'express'
-import { index, show, store, addphoto } from '../controllers/_controller'
+import { index, show, store, update, addphoto } from '../controllers/album_controller'
 const router = express.Router()
+import { createAlbumRules, updateAlbumRules, createPhotosToAlbumRules } from "../validations/album_rules"
 
 
 /**
@@ -17,17 +18,17 @@ router.get('/:userId/albums/albumId', show)
 /**
  * POST /post a new album
  */
-router.post('/:userId/albums/', [], addphoto)
+router.post('/:userId/albums/', createAlbumRules, store)
 
 /**
- * POST /post a new album
+ * PATCH /post a new album
  */
-router.patch('/:userId/albums/albumId', [], store)
+router.patch('/:userId/albums/albumId', updateAlbumRules, update)
 
 /**
- * PATCH /resource/:resourceId
+ * POST / ADD A PHOTO TO AN ALBUM 
  */
-router.post('/:userId/albums/:albumId/photos', [], addphoto)
+router.post('/:userId/albums/:albumId/photos', createPhotosToAlbumRules, addphoto)
 
 
 export default router

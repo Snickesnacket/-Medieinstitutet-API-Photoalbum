@@ -3,11 +3,12 @@
  */
 import { body } from 'express-validator'
 import { getUserByEmail } from '../services/user_service'
+import prisma from '../prisma'
 
-export const createUserRules = [
+export const registerUserRules = [
 	body('first_name').isString().bail().isLength({ min: 3 }),
 	body('last_name').isString().bail().isLength({ min: 3 }),
-	body('email').isEmail().custom(async (value: string) => {
+	body('email').isEmail().isString().custom(async (value: string) => {
 		// check if a User with that email already exists
 		const user = await getUserByEmail(value)
 
@@ -19,16 +20,15 @@ export const createUserRules = [
 	body('password').isString().bail().isLength({ min: 6 }),
 ]
 
-export const updateUserRules = [
-	body('name').optional().isString().bail().isLength({ min: 3 }),
-	body('email').optional().isEmail().custom(async (value: string) => {
-		// check if a User with that email already exists
+export const loginUserRules = [
+	body('email').isEmail().isString().custom(async value => {
+		//check that email exists 
 		const user = await getUserByEmail(value)
 
-		if (user) {
-			// user already exists, throw a hissy-fit
-			return Promise.reject("Email already exists")
+		if (!user) {
+			return Promise.reject("user dosen't exist")
 		}
 	}),
-	body('password').optional().isString().bail().isLength({ min: 6 }),
+	body('password').isString().bail().isLength({ min: 6 }),
 ]
+

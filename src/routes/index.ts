@@ -1,11 +1,12 @@
 import express from "express"
-import profile from './profile'
 import albums from './albums'
 import photos from './photos'
-import unsers from './users'
 import { login, refresh, register } from '../controllers/user_controller'
 import { validateToken } from '../middlewares/auth/jwt'
-import { createUserRules } from '../validations/user_rules'
+import { registerUserRules, loginUserRules } from '../validations/user_rules'
+
+
+
 
 // instantiate a new router
 const router = express.Router()
@@ -20,14 +21,14 @@ router.get('/', (req, res) => {
 })
 
 /**
- * /authors
+ * /photos
  */
-router.use('/photos', photos)
+router.use('/photos', validateToken, photos)
 
 /**
- * /books
+ * /albums
  */
-router.use('/albums', albums)
+router.use('/albums', validateToken, albums)
 
 /**
  * /profile
@@ -38,7 +39,7 @@ router.use('/profile', validateToken, profile)
 /**
  * POST /login
  */
-router.post('/login', login)
+router.post('/login', loginUserRules, login)
 
 /**
  * POST /refresh
@@ -48,6 +49,6 @@ router.post('/refresh', refresh)
 /**
  * POST /register
  */
-router.post('/register', createUserRules, register)
+router.post('/register', registerUserRules, register)
 
 export default router
