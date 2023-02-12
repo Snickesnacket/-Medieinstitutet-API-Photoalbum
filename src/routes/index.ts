@@ -18,8 +18,8 @@ router.get('/', (req, res) => {
 })
 
 router.use('/users/:register', userRouter)
-router.use('/users', Isauthenticated, userRouter)
-router.use('/albums', Isauthenticated, albumsRouter)
-router.use('/photos', Isauthenticated, photosRouter)
+router.use('/users', userRouter)
+router.use('/albums', albumsRouter)
+router.use('/photos', photosRouter)
 
 export default router
