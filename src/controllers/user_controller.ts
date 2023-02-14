@@ -6,18 +6,19 @@ import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
-import prisma from '../prisma'
 import { JwtPayload } from '../types'
 import { createUser, getUserByEmail } from './../services/user_service';
 
 const debug = Debug('prisma-books:user_controller')
+
+
 
 /**
  * Login a user
  */
 export const login = async (req: Request, res: Response) => {
 	// destructure email and password from request body
-	const { email, password } = req.body
+	const { email, password, first_name, last_name } = req.body
 
 	// find user with email, otherwise bail 🛑
 	const user = await getUserByEmail(email)
@@ -69,7 +70,7 @@ export const login = async (req: Request, res: Response) => {
 	})
 
 	// respond with access- and refresh-token
-	res.send({
+	res.send({// THIS IS CORRECT RESPONSE 
 		status: "success",
 		data: {
 			access_token,  // access_token: access_token
@@ -104,20 +105,22 @@ export const register = async (req: Request, res: Response) => {
 
 	// Store the user in the database
 	try {
-		const user = await createUser({
-			id: req.body.id,
+		const user = await createUser({ //  will also send password as of now 
 			email: validatedData.email,
 			password: validatedData.password,
 			first_name: validatedData.first_name,
 			last_name: validatedData.last_name,
 		})
 
+		const { password, ...userWithoutPassword } = user
+
 		// Respond with 201 Created + status success
-		res.status(201).send({ status: "success", data: user })
+		res.status(201).send({ status: "success", data: userWithoutPassword })
 
 	} catch (err) {
 		return res.status(500).send({ status: "error", message: "Could not create user in database" })
 	}
+
 }
 
 /**
@@ -172,7 +175,7 @@ export const refresh = (req: Request, res: Response) => {
 		})
 
 		// Respond with new access token
-		res.send({
+		res.send({ // THIS IS CORRECT RESPONSE 
 			status: "success",
 			data: {
 				access_token,
@@ -188,4 +191,10 @@ export const refresh = (req: Request, res: Response) => {
 		})
 	}
 
+}
+
+module.exports = {
+	register,
+	login,
+	refresh
 }

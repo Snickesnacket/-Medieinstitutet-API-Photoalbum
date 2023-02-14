@@ -2,36 +2,28 @@
  * Type Definitions
  */
 
+import internal from "stream"
+
 export type CreateAlbumData = {
-	id: Int,
 	title: string,
-	user: User
-	user_id: Int
+
 }
 
 export type CreatePhotoData = {
-	id: Int
-	title: String
-	url: String
-	comment?: String
+	id: int
+	title: string
+	url: string
+	comment?: string
 	album: Album[]
-	user: User
-	user_id: Int
+	user: user
+	user_id: int
 }
 
 export type CreateUserData = {
-	id: int,
 	email: string,
 	password: string,
 	first_name: string,
 	last_name: string,
-}
-
-export type UpdateUserData = {
-	first_name?: string,
-	last_name?: string,
-	email?: string,
-	password?: string,
 }
 
 export type JwtPayload = {

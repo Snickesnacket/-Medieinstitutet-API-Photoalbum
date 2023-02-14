@@ -1,10 +1,11 @@
 import express from "express"
 import albums from './albums'
 import photos from './photos'
-import { login, refresh, register } from '../controllers/user_controller'
+import users from './users'
+import profile from "./profile"
 import { validateToken } from '../middlewares/auth/jwt'
 import { registerUserRules, loginUserRules } from '../validations/user_rules'
-
+import { register, login, refresh } from '../controllers/user_controller'
 
 
 
@@ -21,20 +22,14 @@ router.get('/', (req, res) => {
 })
 
 /**
- * /photos
+ * POST /register
  */
-router.use('/photos', validateToken, photos)
-
-/**
- * /albums
- */
-router.use('/albums', validateToken, albums)
+router.post('/register', registerUserRules, register)
 
 /**
  * /profile
  */
 router.use('/profile', validateToken, profile)
-
 
 /**
  * POST /login
@@ -44,11 +39,23 @@ router.post('/login', loginUserRules, login)
 /**
  * POST /refresh
  */
-router.post('/refresh', refresh)
+//router.post('/refresh', refresh)
 
 /**
- * POST /register
+ * /photos
  */
-router.post('/register', registerUserRules, register)
+//router.use('/photos', validateToken, photos)
+
+/**
+ * /albums
+ */
+//router.use('/albums', validateToken, albums)
+
+
+
+
+
+
+
 
 export default router

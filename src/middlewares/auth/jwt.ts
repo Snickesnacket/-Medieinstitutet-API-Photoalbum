@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { JwtPayload } from '../../types'
 
-const debug = Debug('prisma-books:jwt')
+const debug = Debug('PHOTOALBUM:jwt')
 
 /**
  * Validate JWT Access Token
@@ -15,6 +15,7 @@ const debug = Debug('prisma-books:jwt')
  */
 export const validateToken = (req: Request, res: Response, next: NextFunction) => {
 	debug("Hello from auth/jwt!")
+
 
 	// Make sure Authorization header exists, otherwise bail 🛑
 	if (!req.headers.authorization) {
@@ -38,11 +39,12 @@ export const validateToken = (req: Request, res: Response, next: NextFunction) =
 			status: "fail",
 			data: "Authorization required",
 		})
+
 	}
 
 	// Verify token and attach payload to request, otherwise bail 🛑
 	try {
-		const payload = (jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "") as unknown) as JwtPayload
+		const payload = (jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "",) as unknown) as JwtPayload
 		debug("Yay got 📦: %o", payload)
 
 		// Attach payload to Request 🤩

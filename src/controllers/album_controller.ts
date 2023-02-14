@@ -6,7 +6,7 @@ import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { createAlbum, getAlbum, getAlbums } from '../services/album_service'
 import prisma from '../prisma'
-import { title } from 'process'
+
 
 // Create a new debug instance
 const debug = Debug('prisma-books:album_controller')
@@ -18,9 +18,9 @@ export const index = async (req: Request, res: Response) => {
 	try {
 		const albums = await getAlbums()
 
-		res.send({
+		res.send({ // USES FINDMANY AND NOTHING MORE 
 			status: "success",
-			data: albums,
+			data: albums[]
 		})
 
 	} catch (err) {
@@ -53,12 +53,17 @@ export const show = async (req: Request, res: Response) => {
  * Create a album
  */
 export const store = async (req: Request, res: Response) => {
+	// Check for any validation errors
+	const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
 	try {
-		const album = await createAlbum({
-			id: req.body.id,
+		const album = await createAlbum({ // THESE ARE CORRECT RESPONSE BUT SOMETHING IS WRONG
 			title: req.body.title,
-			user: req.body.user,
-			user_id: req.body.user_id
 		})
 		res.send({
 			status: "success",
@@ -75,6 +80,14 @@ export const store = async (req: Request, res: Response) => {
  * add photo to album 
  */
 export const addphoto = async (req: Request, res: Response) => {
+	// Check for any validation errors
+	const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
 	try {
 		const result = await prisma.album.update({
 			where: {
@@ -108,6 +121,14 @@ export const addphoto = async (req: Request, res: Response) => {
  */
 
 export const update = async (req: Request, res: Response) => {
+	// Check for any validation errors
+	const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
 	const albumsId = Number(req.params.albumsId)
 
 	try {

@@ -6,8 +6,6 @@ import { getUserByEmail } from '../services/user_service'
 import prisma from '../prisma'
 
 export const registerUserRules = [
-	body('first_name').isString().bail().isLength({ min: 3 }),
-	body('last_name').isString().bail().isLength({ min: 3 }),
 	body('email').isEmail().isString().custom(async (value: string) => {
 		// check if a User with that email already exists
 		const user = await getUserByEmail(value)
@@ -18,6 +16,8 @@ export const registerUserRules = [
 		}
 	}),
 	body('password').isString().bail().isLength({ min: 6 }),
+	body('first_name').isString().bail().isLength({ min: 3 }),
+	body('last_name').isString().bail().isLength({ min: 3 })
 ]
 
 export const loginUserRules = [

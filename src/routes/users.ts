@@ -1,24 +1,24 @@
 /**
- * Router Template
+ * Profile Router
  */
 import express from 'express'
-import { body } from 'express-validator'
-import { login, register, refresh } from '../controllers/user_controller'
-import user from "./users"
+import { validateToken } from '../middlewares/auth/jwt'
+import albums from './albums'
+import photos from './photos'
 const router = express.Router()
 
+
+
 /**
- * POST /register
+ * /photos
  */
-router.post('/register', [], register)
+router.use('/photos', validateToken, photos)
+
 /**
- * POST /login
+ * /albums
  */
-router.post('/login', [], login)
-/**
- * POST /refresh token
- */
-router.post('/refresh', [], refresh)
+router.use('/albums', validateToken, albums)
+
 
 
 export default router

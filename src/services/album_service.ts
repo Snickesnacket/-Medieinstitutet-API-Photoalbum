@@ -1,14 +1,23 @@
-/**
- * Author Service
- */
+
 import prisma from '../prisma'
 import { CreateAlbumData } from "../types"
-
+import { Request, Response } from 'express'
+import { userInfo } from 'os'
+import { JwtPayload } from '../types'
+import { validateToken } from "../middlewares/auth/jwt"
 /**
  * Get all albums
  */
+
 export const getAlbums = async () => {
-	return await prisma.album.findMany()
+	const user = req.token.sub
+	return await prisma.album.findMany({
+		select: {
+			id: true,
+			title: true,
+			user_id: true,
+		}
+	})
 }
 
 /**
@@ -17,25 +26,25 @@ export const getAlbums = async () => {
  * @param albumId The id of the author to get
  */
 export const getAlbum = async (albumId: number) => {
-	return await prisma.album.findUniqueOrThrow({
+	return await prisma.album.findFirst({
 		where: {
-			id: user_id,
+			id: albumId,
+
 		},
 		include: {
-			photos: true,
+			photos: {
+				select: {
+					id: true,
+					title: true,
+					url: true,
+					comment: true,
+					user_id: true,
+
+				}
+			}
 		}
+
 	})
 }
 
-/**
- * Create a album
- *
- * @param data Album Details
- */
-export const createAlbum = async (data: CreateAlbumData) => {
-	return await prisma.album.create({
-		data: {
-			id: id
-		}
-	})
-}
+
