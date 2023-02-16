@@ -10,7 +10,7 @@ import { validateToken } from "../middlewares/auth/jwt"
  */
 
 export const getAlbums = async () => {
-	const user = req.token.sub
+
 	return await prisma.album.findMany({
 		select: {
 			id: true,
@@ -47,4 +47,22 @@ export const getAlbum = async (albumId: number) => {
 	})
 }
 
+/**
+ * Create a author
+ *
+ * @param data Author Details
+ */
+export const createAlbum = async (data: CreateAlbumData) => {
+	const { title, userId } = data;
 
+	return await prisma.album.create({
+		data: {
+			title,
+			user: {
+				connect: {
+					id: userId
+				}
+			}
+		}
+	});
+};

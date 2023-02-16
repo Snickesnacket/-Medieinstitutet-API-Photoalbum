@@ -7,12 +7,20 @@ import { CreateUserData } from '../types'
 /**
  * Get a user by email
  *
- * @param id of the user  of the user to get
+ * @param id of the user of the user to get
  */
 export const getUserByEmail = async (email: string) => {
 	return await prisma.user.findUnique({
 		where: {
 			email: email,
+		}
+	})
+}
+
+export const getUserById = async (userId: number) => {
+	return await prisma.user.findUnique({
+		where: {
+			id: userId
 		}
 	})
 }

@@ -20,7 +20,7 @@ export const index = async (req: Request, res: Response) => {
 
 		res.send({ // USES FINDMANY AND NOTHING MORE 
 			status: "success",
-			data: albums[]
+			data: albums
 		})
 
 	} catch (err) {
@@ -52,29 +52,38 @@ export const show = async (req: Request, res: Response) => {
 /**
  * Create a album
  */
-export const store = async (req: Request, res: Response) => {
-	// Check for any validation errors
-	const validationErrors = validationResult(req)
-	if (!validationErrors.isEmpty()) {
-		return res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		})
-	}
-	try {
-		const album = await createAlbum({ // THESE ARE CORRECT RESPONSE BUT SOMETHING IS WRONG
-			title: req.body.title,
-		})
-		res.send({
-			status: "success",
-			data: album,
-		})
 
+export const store = async (req: Request, res: Response) => {
+
+	const { title } = req.body;
+	const { userId } = req.params;
+
+	try {
+		const user = await prisma.user.findUnique({
+			where: { id: Number(userId) }
+		});
+
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
+		const album = await prisma.album.create({
+			data: {
+				title,
+				user: {
+					connect: {
+						id: user.id
+					}
+				}
+			}
+		});
+
+		return res.status(201).json(album);
 	} catch (err) {
-		debug("Error thrown when creating a album %o: %o", req.body, err)
-		res.status(500).send({ status: "error", message: "Something went wrong" })
+		console.error(err);
+		return res.status(500).json({ message: 'Internal server error' });
 	}
-}
+};
 
 /**
  * add photo to album 

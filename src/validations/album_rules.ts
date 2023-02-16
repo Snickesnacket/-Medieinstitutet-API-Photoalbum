@@ -3,7 +3,8 @@ import { body } from 'express-validator'
 
 
 export const createAlbumRules = [
-    body('title').isString().isLength({ min: 3 })
+    body('title').isString().isLength({ min: 3 }),
+    body('id').exists()
 ]
 
 export const updateAlbumRules = [
