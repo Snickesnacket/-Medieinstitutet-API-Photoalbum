@@ -7,7 +7,7 @@ import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import { JwtPayload } from '../types'
-import { createUser, getUserByEmail, getUserById } from './../services/user_service';
+import { createUser, getUserByEmail } from './../services/user_service';
 
 const debug = Debug('prisma-books:user_controller')
 
@@ -17,7 +17,7 @@ const debug = Debug('prisma-books:user_controller')
  */
 export const getProfile = async (req: Request, res: Response) => {
 	// User has authenticated successfully
-	const profile = await getUserById(req.token!.sub)
+	const profile = await getUserByEmail(req.token!.email)
 
 	res.send({
 		status: "success",

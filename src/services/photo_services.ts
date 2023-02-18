@@ -11,3 +11,26 @@ export const createPhoto = async (data: CreatePhotoData) => {
         data: data,
     })
 }
+export const getPhotos = async () => {
+
+    return await prisma.photo.findMany({
+        select: {
+            id: true,
+            title: true,
+            url: true,
+            comment: true,
+        }
+    })
+}
+
+export const getPhoto = async (photoId: number) => {
+    return await prisma.photo.findFirst({
+        select: {
+            id: true,
+            title: true,
+            url: true,
+            comment: true
+        },
+    })
+}
+

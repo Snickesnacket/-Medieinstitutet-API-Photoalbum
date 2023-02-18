@@ -1,9 +1,8 @@
 import express from "express"
-import albums from './albums'
 import users from './users'
 import { validateToken } from '../middlewares/auth/jwt'
 import { registerUserRules, loginUserRules } from '../validations/user_rules'
-import { register, login, refresh } from '../controllers/user_controller'
+import { register, login, } from '../controllers/user_controller'
 
 
 

@@ -8,6 +8,17 @@ import { JwtPayload } from '../../types'
 
 const debug = Debug('PHOTOALBUM:jwt')
 
+export const validateUser = (req: Request, res: Response, next: NextFunction) => {
+	// Get user ID from URL params
+	const userId = req.params.userId;
+
+	// Compare user ID in token with user ID in URL params
+	if (!req.user || req.user.id !== Number(userId)) {
+		return res.status(403).json({ error: "Forbidden: User not authorized" });
+	}
+
+	next();
+};
 /**
  * Validate JWT Access Token
  *

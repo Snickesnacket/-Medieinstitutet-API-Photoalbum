@@ -55,8 +55,9 @@ export const show = async (req: Request, res: Response) => {
 
 export const store = async (req: Request, res: Response) => {
 
-	const { title } = req.body;
-	const { userId } = req.params;
+	const title = req.body;
+	const userId = req.params.userId;
+
 
 	try {
 		const user = await prisma.user.findUnique({

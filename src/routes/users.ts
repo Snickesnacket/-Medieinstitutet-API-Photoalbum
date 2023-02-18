@@ -2,9 +2,9 @@
  * Profile Router
  */
 import express from 'express'
-import { validateToken } from '../middlewares/auth/jwt'
-import { getProfile } from '../controllers/user_controller'
+import { validateUser } from '../middlewares/auth/jwt'
 import albums from './albums'
+import photos from './photos'
 const router = express.Router()
 
 
@@ -12,12 +12,12 @@ const router = express.Router()
 /**
  * /photos
  */
-//router.use('/photos', validateToken, photos)
+router.use('/photos', validateUser, photos)
 
 /**
  * /albums
  */
-router.use('/albums', albums)
+router.use('/albums', validateUser, albums)
 
 
 

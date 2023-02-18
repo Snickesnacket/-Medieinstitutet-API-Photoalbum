@@ -4,19 +4,15 @@
 
 import internal from "stream"
 
-export type CreateAlbumData = {
+type CreateAlbumData = {
 	title: string,
-
+	userId: number
 }
-
 export type CreatePhotoData = {
 	id: int
 	title: string
 	url: string
 	comment?: string
-	album: Album[]
-	user: user
-	user_id: int
 }
 
 export type CreateUserData = {
