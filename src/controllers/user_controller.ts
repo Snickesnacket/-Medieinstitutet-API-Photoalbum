@@ -3,11 +3,12 @@
  */
 import bcrypt from 'bcrypt'
 import Debug from 'debug'
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import { JwtPayload } from '../types'
 import { createUser, getUserByEmail } from './../services/user_service';
+import prisma from '../prisma'
 
 const debug = Debug('prisma-books:user_controller')
 
@@ -28,6 +29,9 @@ export const getProfile = async (req: Request, res: Response) => {
 		},
 	})
 }
+
+
+
 
 
 /**

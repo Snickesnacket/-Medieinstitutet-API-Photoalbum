@@ -3,9 +3,10 @@
  */
 import Debug from 'debug'
 import { Request, Response } from 'express'
-import { validationResult } from 'express-validator'
+import { matchedData, validationResult } from 'express-validator'
 import { createAlbum, getAlbum, getAlbums } from '../services/album_service'
 import prisma from '../prisma'
+import { fail } from 'assert'
 
 
 // Create a new debug instance
@@ -54,37 +55,40 @@ export const show = async (req: Request, res: Response) => {
  */
 
 export const store = async (req: Request, res: Response) => {
+	const validationErrors = validationResult(req)
 
-	const title = req.body;
-	const userId = req.params.userId;
-
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			message: validationErrors.array(),
+		})
+	}
+	const validatedData = matchedData(req)
 
 	try {
 		const user = await prisma.user.findUnique({
-			where: { id: Number(userId) }
+			where: { id: Number(req.params.userId) }
 		});
 
 		if (!user) {
 			return res.status(404).json({ message: 'User not found' });
 		}
 
-		const album = await prisma.album.create({
-			data: {
-				title,
-				user: {
-					connect: {
-						id: user.id
-					}
-				}
-			}
+		const album = await createAlbum({
+			title: req.body.title,
+			userId: user.id
 		});
 
-		return res.status(201).json(album);
+		return res.status(201).json({
+			status: "success",
+			data: album,
+		});
 	} catch (err) {
 		console.error(err);
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 };
+
 
 /**
  * add photo to album 

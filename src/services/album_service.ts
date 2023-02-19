@@ -5,6 +5,9 @@ import { Request, Response } from 'express'
 import { userInfo } from 'os'
 import { JwtPayload } from '../types'
 import { validateToken } from "../middlewares/auth/jwt"
+import Debug from 'debug'
+
+const debug = Debug('PHOTOALBUM:album_services')
 /**
  * Get all albums
  */
@@ -48,11 +51,12 @@ export const getAlbum = async (albumId: number) => {
 }
 
 /**
- * Create a author
+ * Create Album
  *
- * @param data Author Details
+ * @param data album Details
  */
 export const createAlbum = async (data: CreateAlbumData) => {
+	console.log("hello form createAlbum")
 	const { title, userId } = data;
 
 	return await prisma.album.create({

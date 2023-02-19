@@ -9,10 +9,10 @@ type CreateAlbumData = {
 	userId: number
 }
 export type CreatePhotoData = {
-	id: int
 	title: string
 	url: string
 	comment?: string
+	user: Int
 }
 
 export type CreateUserData = {

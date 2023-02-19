@@ -19,7 +19,7 @@ import { createAlbum } from '../services/album_service'
 /**
  * POST /post a new album
  */
-router.post('/users/:userId/albums/', createAlbumRules, store);
+router.post('/users/:userId', createAlbumRules, store);
 
 /**
  * PATCH /post a new album
