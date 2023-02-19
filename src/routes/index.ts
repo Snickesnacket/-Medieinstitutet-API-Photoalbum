@@ -5,8 +5,8 @@ import { registerUserRules, loginUserRules } from '../validations/user_rules'
 import { register, login, } from '../controllers/user_controller'
 import { body } from "express-validator"
 import { createAlbum } from "../services/album_service"
-import { store } from "../controllers/album_controller"
-import { getUserByEmail } from "../services/user_service"
+import { index, show, store } from "../controllers/album_controller"
+import { getUserById } from "../services/user_service"
 
 
 // instantiate a new router
@@ -30,19 +30,22 @@ router.post('/users/:userId/albums',
 	validateUser,
 	[
 		body('title').isString().isLength({ min: 3 }),
-		body('email').optional().isEmail().custom(async (value: string) => {
-			// check if a User with that email already exists
-			const user = await getUserByEmail(value)
-
-			if (user) {
-				// user already exists, throw a hissy-fit
-				return Promise.reject("Email already exists")
-			}
-		}),
 	],
 	store,
 );
 
+router.get('/users/:userId/albums',
+	validateToken,
+	validateUser,
+	index,
+)
+
+
+router.get('/users/:userId/albums/:albumId',
+	validateToken,
+	validateUser,
+	show,
+)
 /**
  * POST /login
  */

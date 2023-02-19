@@ -23,6 +23,7 @@ export type CreateUserData = {
 }
 
 export type JwtPayload = {
+
 	sub: number,
 	email: string,
 	password: string,
