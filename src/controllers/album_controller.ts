@@ -16,7 +16,15 @@ const debug = Debug('prisma-books:album_controller')
  * Get all albums
  */
 export const index = async (req: Request, res: Response) => {
+
 	try {
+		const user = await prisma.user.findUnique({
+			where: { id: Number(req.params.userId) }
+		});
+
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
 		const albums = await getAlbums()
 
 		res.send({ // USES FINDMANY AND NOTHING MORE 
@@ -25,7 +33,7 @@ export const index = async (req: Request, res: Response) => {
 		})
 
 	} catch (err) {
-		debug("Error thrown when finding books", err)
+		debug("Error thrown when finding albums", err)
 		res.status(500).send({ status: "error", message: "Something went wrong" })
 	}
 }
@@ -37,6 +45,14 @@ export const show = async (req: Request, res: Response) => {
 	const albumId = Number(req.params.albumId)
 
 	try {
+		const user = await prisma.user.findUnique({
+			where: { id: Number(req.params.userId) }
+		});
+
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
 		const album = await getAlbum(albumId)
 
 		res.send({
@@ -145,6 +161,13 @@ export const update = async (req: Request, res: Response) => {
 	const albumsId = Number(req.params.albumsId)
 
 	try {
+		const user = await prisma.user.findUnique({
+			where: { id: Number(req.params.userId) }
+		});
+
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
 		const album = await prisma.album.update({
 			where: {
 				id: albumsId,

@@ -11,8 +11,15 @@ const debug = Debug('prisma-boilerplate:I_AM_LAZY_AND_HAVE_NOT_CHANGED_THIS_😛
 /**
  * Get all resources
  */
-export const index = async (req: Request, res: Response) => {
+export const photoIndex = async (req: Request, res: Response) => {
     try {
+        const user = await prisma.user.findUnique({
+            where: { id: Number(req.params.userId) }
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
         const photos = await getPhotos()
 
         res.send({ // USES FINDMANY AND NOTHING MORE 
@@ -29,10 +36,17 @@ export const index = async (req: Request, res: Response) => {
 /**
  * Get a single resource
  */
-export const show = async (req: Request, res: Response) => {
+export const photoShow = async (req: Request, res: Response) => {
     const photoId = Number(req.params.photoId)
 
     try {
+        const user = await prisma.user.findUnique({
+            where: { id: Number(req.params.userId) }
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
         const photo = await getPhoto(photoId)
 
         res.send({
@@ -51,13 +65,14 @@ export const show = async (req: Request, res: Response) => {
  * Create a resource
  */
 
-export const store = async (req: Request, res: Response) => {
+export const photoStore = async (req: Request, res: Response) => {
 
     const { title, url, comment, user_id, id, } = req.body;
     const userId = req.params.userId;
 
 
     try {
+
         const user = await prisma.user.findUnique({
             where: { id: Number(userId) }
         });
@@ -87,7 +102,15 @@ export const store = async (req: Request, res: Response) => {
 /**
  * Update a resource
  */
-export const update = async (req: Request, res: Response) => {
+export const photoUpdate = async (req: Request, res: Response) => {
+
+    const user = await prisma.user.findUnique({
+        where: { id: Number(req.params.userId) }
+    });
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
 }
 
 /**

@@ -8,6 +8,8 @@ import { createAlbum } from "../services/album_service"
 import { addphoto, index, show, store, update } from "../controllers/album_controller"
 import { getUserById } from "../services/user_service"
 import { createPhotosToAlbumRules } from "../validations/album_rules"
+import { createPhotoRules, updatePhotoRules } from "../validations/photo_rules"
+import { photoIndex, photoShow, photoStore, photoUpdate } from "../controllers/photo_controller"
 
 
 // instantiate a new router
@@ -24,7 +26,37 @@ router.get('/', (req, res) => {
 
 
 /**
- * /user
+ * GET /users photos from album
+ */
+router.get('/:userId/photos', validateToken,
+	validateUser, photoIndex)
+
+/**
+ * GET /users photo from album
+ */
+
+router.get('/:userId/photos/:photoId', validateToken,
+	validateUser, photoShow)
+
+/**
+ * POST /post a new photo to an album
+ */
+router.post('users/:userId/albums/:albumId/photos', validateToken,
+	validateUser, createPhotoRules, photoStore)
+
+/**
+ * PATCH /resource/:resourceId
+ */
+router.patch('/users/:userId/albums/:albumId/photos/:photoId', validateToken,
+	validateUser, updatePhotoRules, photoUpdate)
+
+
+
+
+
+
+/**
+ * POST /users albums
  */
 router.post('/users/:userId/albums',
 	validateToken,
@@ -35,12 +67,19 @@ router.post('/users/:userId/albums',
 	store,
 );
 
+
+/**
+ * GET /users albums
+ */
 router.get('/users/:userId/albums',
 	validateToken,
 	validateUser,
 	index,
 )
 
+/**
+ * PATCH /post a new album
+ */
 router.patch('/users/:userId/albums/:albumId',
 	validateToken,
 	validateUser,
@@ -49,13 +88,18 @@ router.patch('/users/:userId/albums/:albumId',
 	],
 	update)
 
+/**
+ * GET /users album
+ */
 
 router.get('/users/:userId/albums/:albumId',
 	validateToken,
 	validateUser,
 	show,
 )
-
+/**
+ * POST / ADD A PHOTO TO AN ALBUM 
+ */
 router.post('/users/:userId/albums/:albumId/photo',
 	validateToken,
 	validateUser,
@@ -64,6 +108,11 @@ router.post('/users/:userId/albums/:albumId/photo',
 	],
 	addphoto,
 );
+
+
+
+
+
 /**
  * POST /login
  */
