@@ -106,14 +106,23 @@ export const addphoto = async (req: Request, res: Response) => {
 	const albumId = Number(req.params.albumId)
 
 	try {
-		const resultat = await createPhototoAlbum(req.body.photo_id, albumId,)
+		const user = await prisma.user.findUnique({
+			where: { id: Number(req.params.userId) }
+		});
+
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+
+		await createPhototoAlbum(req.body.photo_id, albumId)
 
 		res.send({
 			status: "success",
-			data: resultat
+			data: null
 		})
 	} catch (err) {
 		debug("Error thrown when creating a album %o: %o", req.body, err)
+		console.error(err)
 		res.status(500).send({ status: "error", message: "Something went wrong" })
 	}
 

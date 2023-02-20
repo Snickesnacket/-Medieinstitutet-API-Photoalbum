@@ -72,10 +72,8 @@ export const createAlbum = async (data: CreateAlbumData) => {
 };
 
 
-export const createPhototoAlbum = async (data: createPhototoAlbumData, albumId: number, photo_id: number) => {
+export const createPhototoAlbum = async (data: createPhototoAlbumData, albumId: number) => {
 	console.log("hello from create photo to album")
-	const { photo_id, albumId } = data;
-
 	return await prisma.album.update({
 		where: {
 			id: albumId
@@ -83,7 +81,7 @@ export const createPhototoAlbum = async (data: createPhototoAlbumData, albumId: 
 		data: {
 			photos: {
 				connect: {
-					id: photo_id,
+					id: Number(data.photo_id),
 				}
 			}
 		},
