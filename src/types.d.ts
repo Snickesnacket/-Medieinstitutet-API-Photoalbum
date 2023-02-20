@@ -14,7 +14,10 @@ export type CreatePhotoData = {
 	comment?: string
 	user: Int
 }
-
+export type createPhototoAlbumData = {
+	photo_id: int,
+	albumId: int
+}
 export type CreateUserData = {
 	email: string,
 	password: string,
@@ -23,7 +26,6 @@ export type CreateUserData = {
 }
 
 export type JwtPayload = {
-
 	sub: number,
 	email: string,
 	password: string,

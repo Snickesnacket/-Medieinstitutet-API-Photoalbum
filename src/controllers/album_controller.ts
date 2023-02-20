@@ -4,7 +4,7 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
-import { createAlbum, getAlbum, getAlbums } from '../services/album_service'
+import { createAlbum, createPhototoAlbum, getAlbum, getAlbums } from '../services/album_service'
 import prisma from '../prisma'
 import { fail } from 'assert'
 
@@ -55,15 +55,15 @@ export const show = async (req: Request, res: Response) => {
  */
 
 export const store = async (req: Request, res: Response) => {
-	const validationErrors = validationResult(req)
-
-	if (!validationErrors.isEmpty()) {
-		return res.status(400).send({
-			status: "fail",
-			message: validationErrors.array(),
-		})
-	}
-	const validatedData = matchedData(req)
+	/* 	const validationErrors = validationResult(req)
+	
+		if (!validationErrors.isEmpty()) {
+			return res.status(400).send({
+				status: "fail",
+				message: validationErrors.array(),
+			})
+		}
+		const validatedData = matchedData(req) */
 
 	try {
 		const user = await prisma.user.findUnique({
@@ -102,25 +102,15 @@ export const addphoto = async (req: Request, res: Response) => {
 			data: validationErrors.array(),
 		})
 	}
+
+	const albumId = Number(req.params.albumId)
+
 	try {
-		const result = await prisma.album.update({
-			where: {
-				id: Number(req.params.albumId),
-			},
-			data: {
-				photos: {
-					connect: {
-						id: req.body.photosId,
-					}
-				}
-			},
-			include: {
-				photos: true,
-			}
-		})
+		const resultat = await createPhototoAlbum(req.body.photo_id, albumId,)
+
 		res.send({
 			status: "success",
-			data: result,
+			data: resultat
 		})
 	} catch (err) {
 		debug("Error thrown when creating a album %o: %o", req.body, err)
