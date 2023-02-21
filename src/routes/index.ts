@@ -1,11 +1,8 @@
 import express from "express"
-import users from './users'
 import { validateToken, validateUser } from '../middlewares/auth/jwt'
 import { registerUserRules, loginUserRules } from '../validations/user_rules'
-import { register, login, } from '../controllers/user_controller'
+import { register, login, refresh } from '../controllers/user_controller'
 import { addphoto, index, show, storeAlbum, update } from "../controllers/album_controller"
-import { getUserById } from "../services/user_service"
-import { createPhotosToAlbumRules } from "../validations/album_rules"
 import { photoIndex, photoShow, photoStore, photoUpdate } from "../controllers/photo_controller"
 import { body } from 'express-validator';
 import { Request, Response } from 'express'
@@ -141,7 +138,7 @@ router.post('/register', registerUserRules, register)
 /**
  * POST /refresh
  */
-//router.post('/refresh', refresh)
+router.post('/refresh', refresh)
 
 /**
  * /photos
@@ -149,18 +146,3 @@ router.post('/register', registerUserRules, register)
 //router.use('/photos',  photos)
 
 export default router
-/* export const validateUser = (req: Request, res: Response, next: NextFunction) => {
-	console.log("valideras som anv'ndare ")
-	// Get user ID from URL params
-	const userId = req.params.userId;
-	console.log(userId)
-
-	// Compare user ID in token with user ID in URL params
-	if (!req.token || req.token.sub !== Number(userId)) {
-		console.log(req.token, userId)
-		return res.status(403).json({ error: "Forbidden: User not authorized" });
-
-	}
-
-	next();
-}; */

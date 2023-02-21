@@ -100,16 +100,4 @@ export const updateAlbum = async (albumId: number, userId: number, userData: upd
 }
 
 
-export const updatePhoto = async (photoId: number, userId: number, userData: UpdatePhotoData) => {
-	return await prisma.photo.update({
-		where: {
-			id: photoId,
-		},
-		data: {
-			...userData,
-			user: {
-				connect: { id: userId }
-			}
-		}
-	})
-}
+

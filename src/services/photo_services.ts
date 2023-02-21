@@ -70,22 +70,3 @@ export const updatePhoto = async (photoId: number, userId: number, userData: Upd
         }
     })
 }
-
-
-
-
-
-
-
-
-/* export const createPhoto = async (data: CreatePhotoData) => {
-
-    return await prisma.photo.create({
-        data: {
-            title: true, 
-            url: true,
-            comment: true, 
-        }
-        
-    });
-}; */
