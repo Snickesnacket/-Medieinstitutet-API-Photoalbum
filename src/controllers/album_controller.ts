@@ -1,6 +1,3 @@
-/**
- * Album Controller
- */
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
@@ -14,7 +11,7 @@ const debug = Debug('PHOTOALBUM:album_controller')
 /**
  * Get all albums
  */
-export const index = async (req: Request, res: Response) => {
+export const albumIndex = async (req: Request, res: Response) => {
 
 	try {
 		const albums = await getAlbums(req.token!.sub)
@@ -33,7 +30,7 @@ export const index = async (req: Request, res: Response) => {
 /**
  * Get a single album
  */
-export const show = async (req: Request, res: Response) => {
+export const albumShow = async (req: Request, res: Response) => {
 	const albumId = Number(req.params.albumId)
 
 	try {
@@ -51,10 +48,9 @@ export const show = async (req: Request, res: Response) => {
 }
 
 /**
- * Create a album
+ * Create an album
  */
-
-export const storeAlbum = async (req: Request, res: Response) => {
+export const albumStore = async (req: Request, res: Response) => {
 	const validationErrors = validationResult(req)
 
 	if (!validationErrors.isEmpty()) {
@@ -66,7 +62,7 @@ export const storeAlbum = async (req: Request, res: Response) => {
 	const validatedData = matchedData(req)
 
 	try {
-		const album = await createAlbum(req.token!.sub, req.body.title)
+		const album = await createAlbum(req.token!.sub, validatedData.title)
 
 		if (!album) {
 			return res.status(404).json({ message: 'Album not found' });
@@ -82,7 +78,6 @@ export const storeAlbum = async (req: Request, res: Response) => {
 	}
 }
 
-
 /**
  * add photo to album 
  */
@@ -96,10 +91,12 @@ export const addphoto = async (req: Request, res: Response) => {
 		})
 	}
 
+	const validatedData = matchedData(req)
+
 	const albumId = Number(req.params.albumId)
 
 	try {
-		console.log("this is req.body.photo_id", req.body.photo_id, albumId)
+		console.log("this is req.body.photo_id", validatedData.photo_id, albumId)
 		const result = await prisma.album.update({
 			where: {
 				id: albumId
@@ -123,12 +120,10 @@ export const addphoto = async (req: Request, res: Response) => {
 
 }
 
-
 /**
- * Patch albums/ albumsId
+ * Patch an album
  */
-
-export const update = async (req: Request, res: Response) => {
+export const albumUpdate = async (req: Request, res: Response) => {
 	// Check for any validation errors
 	const validationErrors = validationResult(req)
 	if (!validationErrors.isEmpty()) {

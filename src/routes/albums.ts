@@ -1,7 +1,7 @@
-import express from 'express'
+/* import express from 'express'
 import { index, show, addphoto, update } from '../controllers/album_controller'
-const router = express.Router()
-import { createAlbumRules, updateAlbumRules, createPhotosToAlbumRules } from "../validations/album_rules"
+const router = express.Router() */
+//import { createAlbumRules, updateAlbumRules, createPhotosToAlbumRules } from "../validations/album_rules"
 
 
 
@@ -53,9 +53,9 @@ import { createAlbumRules, updateAlbumRules, createPhotosToAlbumRules } from "..
  * PATCH /post a new album
  */
 /**
- * POST / ADD A PHOTO TO AN ALBUM 
+ * POST / ADD A PHOTO TO AN ALBUM
  */
 //router.post('/users/:userId/albums/:albumId/photos', createPhotosToAlbumRules, addphoto)
 
 
-export default router
+//export default router

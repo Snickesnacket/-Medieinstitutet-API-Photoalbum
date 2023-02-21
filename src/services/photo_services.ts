@@ -1,14 +1,9 @@
-import { userInfo } from "os";
 import prisma from "../prisma"
-import { CreatePhotoData, UpdatePhotoData } from "../types"
+import { UpdatePhotoData } from "../types"
 
 /**
- * Create a user
- *
- * @param photo User Details
+ * Get all photos
  */
-
-
 export const getPhotos = async (userId: number) => {
     return await prisma.photo.findMany({
         where: {
@@ -23,6 +18,9 @@ export const getPhotos = async (userId: number) => {
     });
 };
 
+/**
+ * Get a photo
+ */
 export const getPhoto = async (photoId: number, userId: number) => {
     return await prisma.photo.findFirst({
         where: {
@@ -38,6 +36,9 @@ export const getPhoto = async (photoId: number, userId: number) => {
     })
 }
 
+/**
+ * Create a photo
+ */
 export const createPhoto = async (userId: number, title: string, url: string, comment?: string,) => {
 
     return await prisma.photo.create({
@@ -54,10 +55,11 @@ export const createPhoto = async (userId: number, title: string, url: string, co
     });
 };
 
-
-
+/**
+ * Update a photo
+ */
 export const updatePhoto = async (photoId: number, userId: number, userData: UpdatePhotoData) => {
-    console.log("tjosan")
+    console.error()
     return await prisma.photo.update({
         where: {
             id: photoId,

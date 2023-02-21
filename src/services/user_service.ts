@@ -1,13 +1,8 @@
-/**
- * User Service
- */
 import prisma from '../prisma'
 import { CreateUserData } from '../types'
 
 /**
  * Get a user by email
- *
- * @param id of the user of the user to get
  */
 export const getUserByEmail = async (email: string) => {
 	return await prisma.user.findUnique({
@@ -17,6 +12,9 @@ export const getUserByEmail = async (email: string) => {
 	})
 }
 
+/**
+ * Get a user by id
+ */
 export const getUserById = async (userId: number) => {
 	return await prisma.user.findUnique({
 		where: {
@@ -27,8 +25,6 @@ export const getUserById = async (userId: number) => {
 
 /**
  * Create a user. vad som skickas IN 
- *
- * @param data User Details
  */
 export const createUser = async (data: CreateUserData) => {
 	return await prisma.user.create({

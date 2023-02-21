@@ -1,17 +1,12 @@
-/**
- * User Controller
- */
 import bcrypt from 'bcrypt'
 import Debug from 'debug'
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import { JwtPayload } from '../types'
 import { createUser, getUserByEmail } from './../services/user_service';
-import prisma from '../prisma'
 
 const debug = Debug('prisma-books:user_controller')
-
 
 /**
  * Get the authenticated user's profile
@@ -29,10 +24,6 @@ export const getProfile = async (req: Request, res: Response) => {
 		},
 	})
 }
-
-
-
-
 
 /**
  * Login a user
@@ -91,10 +82,10 @@ export const login = async (req: Request, res: Response) => {
 	})
 
 	// respond with access- and refresh-token
-	res.send({// THIS IS CORRECT RESPONSE 
+	res.send({
 		status: "success",
 		data: {
-			access_token,  // access_token: access_token
+			access_token,
 			refresh_token,
 		}
 	})
@@ -196,7 +187,7 @@ export const refresh = (req: Request, res: Response) => {
 		})
 
 		// Respond with new access token
-		res.send({ // THIS IS CORRECT RESPONSE 
+		res.send({
 			status: "success",
 			data: {
 				access_token,

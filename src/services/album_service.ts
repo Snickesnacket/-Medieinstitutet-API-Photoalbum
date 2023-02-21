@@ -1,17 +1,11 @@
-
 import prisma from '../prisma'
-import { CreateAlbumData, createPhototoAlbumData, updateAlbumData } from "../types"
-import { Request, Response } from 'express'
-import { userInfo } from 'os'
-import { JwtPayload } from '../types'
-import { validateToken } from "../middlewares/auth/jwt"
 import Debug from 'debug'
+import { updateAlbumData } from '../types'
 
 const debug = Debug('PHOTOALBUM:album_services')
 /**
  * Get all albums
  */
-
 export const getAlbums = async (userId: number) => {
 
 	return await prisma.album.findMany({
@@ -28,8 +22,6 @@ export const getAlbums = async (userId: number) => {
 
 /**
  * Get a single album
- *
- * @param albumId The id of the author to get
  */
 export const getAlbum = async (albumId: number, userId: number) => {
 	return await prisma.album.findFirst({
@@ -54,13 +46,8 @@ export const getAlbum = async (albumId: number, userId: number) => {
 	})
 }
 
-
-
 /**
  * Create Album
- *
- * @param userId number 
- * @param title string 
  */
 export const createAlbum = async (userId: number, title: string) => {
 	const user = await prisma.user.findUnique({
@@ -85,6 +72,9 @@ export const createAlbum = async (userId: number, title: string) => {
 	})
 }
 
+/**
+ * Update Album
+ */
 export const updateAlbum = async (albumId: number, userId: number, userData: updateAlbumData) => {
 	return await prisma.album.update({
 		where: {

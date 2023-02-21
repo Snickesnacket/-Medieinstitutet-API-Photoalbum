@@ -2,11 +2,9 @@ import express from "express"
 import { validateToken, validateUser } from '../middlewares/auth/jwt'
 import { registerUserRules, loginUserRules } from '../validations/user_rules'
 import { register, login, refresh } from '../controllers/user_controller'
-import { addphoto, index, show, storeAlbum, update } from "../controllers/album_controller"
+import { addphoto, albumIndex, albumShow, albumStore, albumUpdate } from "../controllers/album_controller"
 import { photoIndex, photoShow, photoStore, photoUpdate } from "../controllers/photo_controller"
-import { body } from 'express-validator';
-import { Request, Response } from 'express'
-import { PatchPhoto } from "../validations/All_validations"
+import { addPhototoAlbum, getUsersPhotos, patchAlbum, PatchPhoto, postAlbums, PostPhoto, } from "../validations/All_validations"
 
 
 
@@ -36,24 +34,19 @@ router.get('/photos',
  * GET /users photos
  */
 
-router.get('/photos/:photoId', validateToken,
+router.get('/photos/:photoId',
+	validateToken,
 	validateUser,
-	[
-		body('photo_id').exists().isInt().withMessage({ message: "PhotoId is not integer" }),
-	],
+	getUsersPhotos,
 	photoShow)
 
 /**
  * POST /post a new photo
  */
-router.post('/photos',
+router.post('/photo',
 	validateToken,
 	validateUser,
-	[
-		body('title').isString().isLength({ min: 3 }),
-		body('url').isString(),
-		body('comment').isString().isLength({ min: 3 })
-	],
+	PostPhoto,
 	photoStore)
 
 /**
@@ -65,18 +58,14 @@ router.patch('/photos/:photoId',
 	PatchPhoto,
 	photoUpdate);
 
-
-
 /**
  * POST /users albums
  */
 router.post('/albums',
 	validateToken,
 	validateUser,
-	[
-		body('title').isString().isLength({ min: 3 }).withMessage({ message: "Title is required" }),
-	],
-	storeAlbum,
+	postAlbums,
+	albumStore,
 );
 
 
@@ -86,7 +75,7 @@ router.post('/albums',
 router.get('/albums',
 	validateToken,
 	validateUser,
-	index,
+	albumIndex,
 )
 
 /**
@@ -95,10 +84,8 @@ router.get('/albums',
 router.patch('/albums/:albumId',
 	validateToken,
 	validateUser,
-	[
-		body('title').exists().isLength({ min: 3 }).withMessage({ message: "Could not find album" }),
-	],
-	update)
+	patchAlbum,
+	albumUpdate)
 
 /**
  * GET /users album
@@ -107,7 +94,7 @@ router.patch('/albums/:albumId',
 router.get('/albums/:albumId',
 	validateToken,
 	validateUser,
-	show,
+	albumShow,
 )
 /**
  * POST / ADD A PHOTO TO AN ALBUM 
@@ -115,13 +102,9 @@ router.get('/albums/:albumId',
 router.post('/albums/:albumId/photo',
 	validateToken,
 	validateUser,
-	[
-		body('photo_id').exists().isInt().withMessage({ message: "PhotoId is not integer" }),
-	],
+	addPhototoAlbum,
 	addphoto,
 );
-
-
 
 
 
@@ -140,9 +123,5 @@ router.post('/register', registerUserRules, register)
  */
 router.post('/refresh', refresh)
 
-/**
- * /photos
- */
-//router.use('/photos',  photos)
 
 export default router

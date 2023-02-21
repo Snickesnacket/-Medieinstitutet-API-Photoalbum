@@ -1,9 +1,6 @@
-/**
- * Validation Rules for User resource
- */
 import { body } from 'express-validator'
 import { getUserByEmail } from '../services/user_service'
-import prisma from '../prisma'
+
 
 export const registerUserRules = [
 	body('email').isEmail().isString().custom(async (value: string) => {

@@ -2,14 +2,12 @@ import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import { getPhotos, getPhoto, createPhoto, updatePhoto } from '../services/photo_services'
-import prisma from '../prisma'
-
 
 // Create a new debug instance
 const debug = Debug('prisma-boilerplate:I_AM_LAZY_AND_HAVE_NOT_CHANGED_THIS_😛')
 
 /**
- * Get all photos of user 
+ * Get all photos 
  */
 export const photoIndex = async (req: Request, res: Response) => {
     try {
@@ -28,7 +26,7 @@ export const photoIndex = async (req: Request, res: Response) => {
 }
 
 /**
- * Get a single resource
+ * Get a photo
  */
 export const photoShow = async (req: Request, res: Response) => {
     const photoId = Number(req.params.photoId)
@@ -53,10 +51,8 @@ export const photoShow = async (req: Request, res: Response) => {
 }
 
 /**
- * Create a resource
+ * Create a photo
  */
-
-
 export const photoStore = async (req: Request, res: Response) => {
     const validationErrors = validationResult(req);
 
@@ -67,8 +63,9 @@ export const photoStore = async (req: Request, res: Response) => {
         });
     }
 
+    const validatedData = matchedData(req)
     try {
-        const photo = await createPhoto(req.token!.sub, req.body.title, req.body.url, req.body.comment);
+        const photo = await createPhoto(req.token!.sub, validatedData.title, validatedData.url, validatedData.comment);
 
         return res.status(201).json({
             status: "success",
@@ -79,8 +76,9 @@ export const photoStore = async (req: Request, res: Response) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 /**
- * Update a resource
+ * Update a photo
  */
 export const photoUpdate = async (req: Request, res: Response) => {
     // Check for any validation errors
@@ -99,7 +97,11 @@ export const photoUpdate = async (req: Request, res: Response) => {
     console.log("validatedData", validatedData)
 
     try {
-        const userData = await updatePhoto(photoId, req.token!.sub, validatedData)
+        const userData = await updatePhoto(photoId, req.token!.sub, {
+            title: validatedData.title,
+            url: validatedData.url,
+            comment: validatedData.comment,
+        })
         console.log("this is userData", userData)
         res.send({ status: "success", data: userData })
 
@@ -108,9 +110,8 @@ export const photoUpdate = async (req: Request, res: Response) => {
     }
 }
 
-
 /**
- * Delete a resource
+ * Delete a photo
  */
 export const destroy = async (req: Request, res: Response) => {
 }
