@@ -1,7 +1,7 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
-import { createAlbum, getAlbum, getAlbums, updateAlbum } from '../services/album_service'
+import { connectPhotosToAlbum, createAlbum, getAlbum, getAlbums, updateAlbum } from '../services/album_service'
 import prisma from '../prisma'
 
 
@@ -144,4 +144,44 @@ export const albumUpdate = async (req: Request, res: Response) => {
 		return res.status(500).send({ message: "Something went wrong" })
 	}
 }
+
+/**
+ * Post a photo to an album 
+*/
+export const albumPostMany = async (req: Request, res: Response) => {
+	// Check for any validation errors
+	const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
+
+	const validatedData = matchedData(req)
+
+	try {
+		const albumId = Number(req.params.albumId);
+		const photo_id = validatedData.photo_id;
+
+		// Connect the photos to the album
+		await connectPhotosToAlbum(albumId, photo_id);
+
+		// Return the updated album data
+		res.status(201).json({
+			status: "success",
+			data: null,
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({
+			status: "error",
+			message: "Something went wrong",
+		});
+	}
+}
+
+
+
+
 

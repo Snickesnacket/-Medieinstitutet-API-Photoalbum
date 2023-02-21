@@ -27,3 +27,7 @@ export const patchAlbum = [
 export const addPhototoAlbum = [
     body('photo_id').exists().isInt().withMessage({ message: "PhotoId is not integer" }),
 ]
+
+export const postToAlbumsPhotos = [
+    body('photo_id').exists().isInt().withMessage({ message: "PhotoId is not integer" }),
+]

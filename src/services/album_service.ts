@@ -91,3 +91,15 @@ export const updateAlbum = async (albumId: number, userId: number, userData: upd
 
 
 
+export async function connectPhotosToAlbum(albumId: number, photo_id: number[]) {
+	return prisma.album.update({
+		where: {
+			id: albumId,
+		},
+		data: {
+			photos: {
+				connect: photo_id.map((photoId) => ({ id: photoId })),
+			},
+		},
+	});
+}
