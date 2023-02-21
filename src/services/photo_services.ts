@@ -8,19 +8,34 @@ import { CreatePhotoData } from "../types"
  * @param photo User Details
  */
 
-export const createPhoto = async (data: CreatePhotoData) => {
-    const { title, url, comment, user_id, id } = data;
+export const createPhoto = async (userId: number, title: string, url: string, comment?: string,) => {
 
     return await prisma.photo.create({
         data: {
-            title,
-            url,
+            title: title,
+            url: url,
             comment,
-            user_id,
-            id,
+            user: {
+                connect: {
+                    id: userId,
+                }
+            }
         }
     });
 };
+
+export const createAlbum = async (userId: number, title: string) => {
+    return await prisma.album.create({
+        data: {
+            title,
+            user: {
+                connect: {
+                    id: userId
+                }
+            }
+        }
+    })
+}
 export const getPhotos = async () => {
 
     return await prisma.photo.findMany({

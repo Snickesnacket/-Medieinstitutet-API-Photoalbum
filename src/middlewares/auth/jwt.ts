@@ -23,6 +23,7 @@ const debug = Debug('PHOTOALBUM:jwt')
 
 
 export const validateUser = async (req: Request, res: Response, next: NextFunction) => {
+	console.log("Hello from user validation")
 	// User has authenticated successfully
 	const user = await getUserById(req.token!.sub)
 	if (!user) {

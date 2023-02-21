@@ -1,7 +1,7 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
-import { getPhotos, getPhoto } from '../services/photo_services'
+import { getPhotos, getPhoto, createPhoto } from '../services/photo_services'
 import prisma from '../prisma'
 
 
@@ -66,34 +66,22 @@ export const photoShow = async (req: Request, res: Response) => {
  */
 
 export const photoStore = async (req: Request, res: Response) => {
+    const validationErrors = validationResult(req)
 
-    const { title, url, comment, user_id, id, } = req.body;
-    const userId = req.params.userId;
-
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).send({
+            status: "fail",
+            message: validationErrors.array(),
+        })
+    }
 
     try {
+        const photo = await createPhoto(req.token!.sub, req.body.title, req.body.url, req.body.comment)
 
-        const user = await prisma.user.findUnique({
-            where: { id: Number(userId) }
-        });
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        const photo = await prisma.photo.create({
-            data: {
-                title,
-                url,
-                comment,
-                user_id,
-                id
-            }
-
-
-        });
-
-        return res.status(201).json(photo);
+        return res.status(201).json({
+            status: "success",
+            data: photo,
+        })
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error' });

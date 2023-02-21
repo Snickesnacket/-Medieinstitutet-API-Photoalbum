@@ -40,8 +40,15 @@ router.get('/photos/:photoId', validateToken,
 /**
  * POST /post a new photo to an album
  */
-router.post('/albums/:albumId/photos', validateToken,
-	validateUser, createPhotoRules, photoStore)
+router.post('/photos',
+	validateToken,
+	validateUser,
+	[
+		body('title').isString().isLength({ min: 3 }),
+		body('url').isString(),
+		body('comment').isString().isLength({ min: 3 })
+	],
+	photoStore)
 
 /**
  * PATCH /resource/:resourceId
