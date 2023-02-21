@@ -12,9 +12,12 @@ const debug = Debug('PHOTOALBUM:album_services')
  * Get all albums
  */
 
-export const getAlbums = async () => {
+export const getAlbums = async (userId: number) => {
 
 	return await prisma.album.findMany({
+		where: {
+			user_id: userId
+		},
 		select: {
 			id: true,
 			title: true,
@@ -28,10 +31,11 @@ export const getAlbums = async () => {
  *
  * @param albumId The id of the author to get
  */
-export const getAlbum = async (albumId: number) => {
+export const getAlbum = async (albumId: number, userId: number) => {
 	return await prisma.album.findFirst({
 		where: {
 			id: albumId,
+			user_id: userId
 
 		},
 		include: {
@@ -50,6 +54,8 @@ export const getAlbum = async (albumId: number) => {
 	})
 }
 
+
+
 /**
  * Create Album
  *
@@ -57,23 +63,53 @@ export const getAlbum = async (albumId: number) => {
  * @param title string 
  */
 export const createAlbum = async (userId: number, title: string) => {
+	const user = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+	})
+
+	if (!user) {
+		throw new Error(`User with ID ${userId} not found`)
+	}
+
 	return await prisma.album.create({
 		data: {
 			title,
 			user: {
 				connect: {
-					id: userId
-				}
+					id: user.id,
+				},
+			},
+		},
+	})
+}
+
+export const updateAlbum = async (albumId: number, userId: number, userData: updateAlbumData) => {
+	return await prisma.album.update({
+		where: {
+			id: albumId,
+		},
+		data: {
+			...userData,
+			user: {
+				connect: { id: userId }
 			}
 		}
 	})
 }
 
-export const updateAlbum = async (albumId: number, userData: updateAlbumData) => {
-	return await prisma.album.update({
+
+export const updatePhoto = async (photoId: number, userId: number, userData: UpdatePhotoData) => {
+	return await prisma.photo.update({
 		where: {
-			id: albumId,
+			id: photoId,
 		},
-		data: userData
+		data: {
+			...userData,
+			user: {
+				connect: { id: userId }
+			}
+		}
 	})
 }

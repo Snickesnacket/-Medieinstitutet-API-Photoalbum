@@ -9,11 +9,12 @@ import prisma from '../prisma'
 const debug = Debug('prisma-boilerplate:I_AM_LAZY_AND_HAVE_NOT_CHANGED_THIS_😛')
 
 /**
- * Get all resources
+ * Get all photos of user 
  */
 export const photoIndex = async (req: Request, res: Response) => {
     try {
-        const photos = await getPhotos()
+        const photos = await getPhotos(req.token!.sub)
+        console.log("users id", req.token!.sub)
 
         res.send({ // USES FINDMANY AND NOTHING MORE 
             status: "success",
@@ -33,14 +34,11 @@ export const photoShow = async (req: Request, res: Response) => {
     const photoId = Number(req.params.photoId)
 
     try {
-        const user = await prisma.user.findUnique({
-            where: { id: Number(req.params.photoId) }
-        });
+        const photo = await getPhoto(photoId, req.token!.sub)
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        if (!photo) {
+            return res.status(404).json({ message: 'Photo not found' });
         }
-        const photo = await getPhoto(photoId)
 
         res.send({
             status: "success",
@@ -58,33 +56,36 @@ export const photoShow = async (req: Request, res: Response) => {
  * Create a resource
  */
 
+
 export const photoStore = async (req: Request, res: Response) => {
-    const validationErrors = validationResult(req)
+    const validationErrors = validationResult(req);
 
     if (!validationErrors.isEmpty()) {
         return res.status(400).send({
             status: "fail",
             message: validationErrors.array(),
-        })
+        });
     }
 
     try {
-        const photo = await createPhoto(req.token!.sub, req.body.title, req.body.url, req.body.comment)
+        const photo = await createPhoto(req.token!.sub, req.body.title, req.body.url, req.body.comment);
 
         return res.status(201).json({
             status: "success",
             data: photo,
-        })
+        });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 /**
  * Update a resource
  */
-export const update = async (req: Request, res: Response) => {
+export const photoUpdate = async (req: Request, res: Response) => {
     // Check for any validation errors
+
+    console.log('kommer vi hit?')
     const validationErrors = validationResult(req)
     if (!validationErrors.isEmpty()) {
         return res.status(400).send({
@@ -92,11 +93,13 @@ export const update = async (req: Request, res: Response) => {
             data: validationErrors.array(),
         })
     }
+
     const validatedData = matchedData(req)
     const photoId = Number(req.params.photoId)
+    console.log("validatedData", validatedData)
 
     try {
-        const userData = await updatePhoto(req.token!.sub, validatedData)
+        const userData = await updatePhoto(photoId, req.token!.sub, validatedData)
         console.log("this is userData", userData)
         res.send({ status: "success", data: userData })
 

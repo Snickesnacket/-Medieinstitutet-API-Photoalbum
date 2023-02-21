@@ -6,7 +6,7 @@ import { register, login, } from '../controllers/user_controller'
 import { addphoto, index, show, storeAlbum, update } from "../controllers/album_controller"
 import { getUserById } from "../services/user_service"
 import { createPhotosToAlbumRules } from "../validations/album_rules"
-import { photoIndex, photoShow, photoStore, } from "../controllers/photo_controller"
+import { photoIndex, photoShow, photoStore, photoUpdate } from "../controllers/photo_controller"
 import { body } from 'express-validator';
 import { Request, Response } from 'express'
 import { PatchPhoto } from "../validations/All_validations"
@@ -65,8 +65,8 @@ router.post('/photos',
 router.patch('/photos/:photoId',
 	validateToken,
 	validateUser,
-
-	update);
+	PatchPhoto,
+	photoUpdate);
 
 
 

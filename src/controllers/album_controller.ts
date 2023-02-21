@@ -6,7 +6,6 @@ import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import { createAlbum, getAlbum, getAlbums, updateAlbum } from '../services/album_service'
 import prisma from '../prisma'
-import { fail } from 'assert'
 
 
 // Create a new debug instance
@@ -18,8 +17,7 @@ const debug = Debug('PHOTOALBUM:album_controller')
 export const index = async (req: Request, res: Response) => {
 
 	try {
-
-		const albums = await getAlbums()
+		const albums = await getAlbums(req.token!.sub)
 
 		res.send({
 			status: "success",
@@ -39,7 +37,7 @@ export const show = async (req: Request, res: Response) => {
 	const albumId = Number(req.params.albumId)
 
 	try {
-		const album = await getAlbum(albumId)
+		const album = await getAlbum(albumId, req.token!.sub)
 
 		res.send({
 			status: "success",
@@ -69,6 +67,10 @@ export const storeAlbum = async (req: Request, res: Response) => {
 
 	try {
 		const album = await createAlbum(req.token!.sub, req.body.title)
+
+		if (!album) {
+			return res.status(404).json({ message: 'Album not found' });
+		}
 
 		return res.status(201).json({
 			status: "success",
@@ -136,10 +138,10 @@ export const update = async (req: Request, res: Response) => {
 		})
 	}
 	const validatedData = matchedData(req)
-	const albumsId = Number(req.params.albumsId)
+	const albumId = Number(req.params.albumId)
 
 	try {
-		const userData = await updateAlbum(req.token!.sub, validatedData)
+		const userData = await updateAlbum(albumId, req.token!.sub, validatedData)
 
 		res.send({ status: "success", data: userData })
 

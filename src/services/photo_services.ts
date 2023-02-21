@@ -8,6 +8,36 @@ import { CreatePhotoData, UpdatePhotoData } from "../types"
  * @param photo User Details
  */
 
+
+export const getPhotos = async (userId: number) => {
+    return await prisma.photo.findMany({
+        where: {
+            user_id: userId
+        },
+        select: {
+            id: true,
+            title: true,
+            url: true,
+            comment: true
+        }
+    });
+};
+
+export const getPhoto = async (photoId: number, userId: number) => {
+    return await prisma.photo.findFirst({
+        where: {
+            id: photoId,
+            user_id: userId
+        },
+        select: {
+            id: true,
+            title: true,
+            url: true,
+            comment: true,
+        }
+    })
+}
+
 export const createPhoto = async (userId: number, title: string, url: string, comment?: string,) => {
 
     return await prisma.photo.create({
@@ -24,50 +54,27 @@ export const createPhoto = async (userId: number, title: string, url: string, co
     });
 };
 
-export const createAlbum = async (userId: number, title: string) => {
-    return await prisma.album.create({
-        data: {
-            title,
-            user: {
-                connect: {
-                    id: userId
-                }
-            }
-        }
-    })
-}
-export const getPhotos = async () => {
 
-    return await prisma.photo.findMany({
-        select: {
-            id: true,
-            title: true,
-            url: true,
-            comment: true,
-        }
-    })
-}
 
-export const getPhoto = async (photoId: number) => {
-    return await prisma.photo.findFirst({
-        select: {
-            id: true,
-            title: true,
-            url: true,
-            comment: true
-        }
-    })
-
-}
-
-export const updatePhoto = async (photoId: number, userData: UpdatePhotoData) => {
+export const updatePhoto = async (photoId: number, userId: number, userData: UpdatePhotoData) => {
+    console.log("tjosan")
     return await prisma.photo.update({
         where: {
             id: photoId,
         },
-        data: userData
+        data: {
+            ...userData,
+            user: {
+                connect: { id: userId }
+            }
+        }
     })
 }
+
+
+
+
+
 
 
 
