@@ -83,7 +83,7 @@ router.patch('/albums/:albumId',
 	validateToken,
 	validateUser,
 	[
-		body('albumId').exists().withMessage({ message: "Could not find album" }),
+		body('title').exists().isLength({ min: 3 }).withMessage({ message: "Could not find album" }),
 	],
 	update)
 

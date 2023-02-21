@@ -4,7 +4,7 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
-import { createAlbum, createPhototoAlbum, getAlbum, getAlbums } from '../services/album_service'
+import { createAlbum, getAlbum, getAlbums, updateAlbum } from '../services/album_service'
 import prisma from '../prisma'
 import { fail } from 'assert'
 
@@ -97,20 +97,22 @@ export const addphoto = async (req: Request, res: Response) => {
 	const albumId = Number(req.params.albumId)
 
 	try {
-		const user = await prisma.user.findUnique({
-			where: { id: Number(req.params.userId) }
-		});
+		console.log("this is req.body.photo_id", req.body.photo_id, albumId)
+		const result = await prisma.album.update({
+			where: {
+				id: albumId
+			},
+			data: {
+				photos: {
+					connect: {
+						id: req.body.photo_id,
+					}
+				}
+			},
 
-		if (!user) {
-			return res.status(404).json({ message: 'User not found' });
-		}
-
-		await createPhototoAlbum(req.body.photo_id, albumId)
-
-		res.send({
-			status: "success",
-			data: null
 		})
+		res.status(201).send(result)
+
 	} catch (err) {
 		debug("Error thrown when creating a album %o: %o", req.body, err)
 		console.error(err)
@@ -133,24 +135,14 @@ export const update = async (req: Request, res: Response) => {
 			data: validationErrors.array(),
 		})
 	}
+	const validatedData = matchedData(req)
 	const albumsId = Number(req.params.albumsId)
 
 	try {
-		const user = await prisma.user.findUnique({
-			where: { id: Number(req.params.userId) }
-		});
+		const userData = await updateAlbum(req.token!.sub, validatedData)
 
-		if (!user) {
-			return res.status(404).json({ message: 'User not found' });
-		}
-		const album = await prisma.album.update({
-			where: {
-				id: albumsId,
-			},
-			data:
-				req.body,
-		})
-		return res.send(album)
+		res.send({ status: "success", data: userData })
+
 	} catch (err) {
 		return res.status(500).send({ message: "Something went wrong" })
 	}

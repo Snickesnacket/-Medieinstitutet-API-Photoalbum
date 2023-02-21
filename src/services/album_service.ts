@@ -1,6 +1,6 @@
 
 import prisma from '../prisma'
-import { CreateAlbumData, createPhototoAlbumData } from "../types"
+import { CreateAlbumData, createPhototoAlbumData, updateAlbumData } from "../types"
 import { Request, Response } from 'express'
 import { userInfo } from 'os'
 import { JwtPayload } from '../types'
@@ -69,22 +69,11 @@ export const createAlbum = async (userId: number, title: string) => {
 	})
 }
 
-
-
-
-export const createPhototoAlbum = async (data: createPhototoAlbumData, albumId: number) => {
-	console.log("hello from create photo to album")
+export const updateAlbum = async (albumId: number, userData: updateAlbumData) => {
 	return await prisma.album.update({
 		where: {
-			id: albumId
+			id: albumId,
 		},
-		data: {
-			photos: {
-				connect: {
-					id: Number(data.photo_id),
-				}
-			}
-		},
-
+		data: userData
 	})
 }

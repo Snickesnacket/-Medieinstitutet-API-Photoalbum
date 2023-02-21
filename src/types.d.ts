@@ -34,3 +34,7 @@ export type JwtPayload = {
 	iat?: number,
 	exp?: number,
 }
+
+export type updateAlbumData = {
+	title?: string,
+}
