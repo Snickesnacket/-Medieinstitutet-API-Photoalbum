@@ -7,7 +7,7 @@ import { body } from "express-validator"
 import { addphoto, index, show, storeAlbum, update } from "../controllers/album_controller"
 import { getUserById } from "../services/user_service"
 import { createPhotosToAlbumRules } from "../validations/album_rules"
-import { createPhotoRules, updatePhotoRules } from "../validations/photo_rules"
+import { updatePhotoRules } from "../validations/photo_rules"
 import { photoIndex, photoShow, photoStore, photoUpdate } from "../controllers/photo_controller"
 
 
@@ -27,15 +27,21 @@ router.get('/', (req, res) => {
 /**
  * GET /users photos from album
  */
-router.get('/photos', validateToken,
-	validateUser, photoIndex)
+router.get('/photos',
+	validateToken,
+	validateUser,
+	photoIndex)
 
 /**
  * GET /users photo from album
  */
 
 router.get('/photos/:photoId', validateToken,
-	validateUser, photoShow)
+	validateUser,
+	[
+		body('photo_id').exists().isInt().withMessage({ message: "PhotoId is not integer" }),
+	],
+	photoShow)
 
 /**
  * POST /post a new photo to an album
