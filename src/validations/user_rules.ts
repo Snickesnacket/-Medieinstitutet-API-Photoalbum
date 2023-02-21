@@ -31,4 +31,3 @@ export const loginUserRules = [
 	}),
 	body('password').isString().bail().isLength({ min: 6 }),
 ]
-

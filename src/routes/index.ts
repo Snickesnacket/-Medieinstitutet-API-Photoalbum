@@ -4,8 +4,7 @@ import { validateToken, validateUser } from '../middlewares/auth/jwt'
 import { registerUserRules, loginUserRules } from '../validations/user_rules'
 import { register, login, } from '../controllers/user_controller'
 import { body } from "express-validator"
-import { createAlbum } from "../services/album_service"
-import { addphoto, index, show, store, update } from "../controllers/album_controller"
+import { addphoto, index, show, storeAlbum, update } from "../controllers/album_controller"
 import { getUserById } from "../services/user_service"
 import { createPhotosToAlbumRules } from "../validations/album_rules"
 import { createPhotoRules, updatePhotoRules } from "../validations/photo_rules"
@@ -28,26 +27,26 @@ router.get('/', (req, res) => {
 /**
  * GET /users photos from album
  */
-router.get('/:userId/photos', validateToken,
+router.get('/photos', validateToken,
 	validateUser, photoIndex)
 
 /**
  * GET /users photo from album
  */
 
-router.get('/:userId/photos/:photoId', validateToken,
+router.get('/photos/:photoId', validateToken,
 	validateUser, photoShow)
 
 /**
  * POST /post a new photo to an album
  */
-router.post('users/:userId/albums/:albumId/photos', validateToken,
+router.post('/albums/:albumId/photos', validateToken,
 	validateUser, createPhotoRules, photoStore)
 
 /**
  * PATCH /resource/:resourceId
  */
-router.patch('/users/:userId/albums/:albumId/photos/:photoId', validateToken,
+router.patch('/albums/:albumId/photos/:photoId', validateToken,
 	validateUser, updatePhotoRules, photoUpdate)
 
 
@@ -58,20 +57,20 @@ router.patch('/users/:userId/albums/:albumId/photos/:photoId', validateToken,
 /**
  * POST /users albums
  */
-router.post('/users/:userId/albums',
+router.post('/albums',
 	validateToken,
 	validateUser,
 	[
 		body('title').isString().isLength({ min: 3 }).withMessage({ message: "Title is required" }),
 	],
-	store,
+	storeAlbum,
 );
 
 
 /**
  * GET /users albums
  */
-router.get('/users/:userId/albums',
+router.get('/albums',
 	validateToken,
 	validateUser,
 	index,
@@ -80,7 +79,7 @@ router.get('/users/:userId/albums',
 /**
  * PATCH /post a new album
  */
-router.patch('/users/:userId/albums/:albumId',
+router.patch('/albums/:albumId',
 	validateToken,
 	validateUser,
 	[
@@ -92,7 +91,7 @@ router.patch('/users/:userId/albums/:albumId',
  * GET /users album
  */
 
-router.get('/users/:userId/albums/:albumId',
+router.get('/albums/:albumId',
 	validateToken,
 	validateUser,
 	show,
@@ -100,7 +99,7 @@ router.get('/users/:userId/albums/:albumId',
 /**
  * POST / ADD A PHOTO TO AN ALBUM 
  */
-router.post('/users/:userId/albums/:albumId/photo',
+router.post('/albums/:albumId/photo',
 	validateToken,
 	validateUser,
 	[
@@ -134,3 +133,18 @@ router.post('/register', registerUserRules, register)
 //router.use('/photos',  photos)
 
 export default router
+/* export const validateUser = (req: Request, res: Response, next: NextFunction) => {
+	console.log("valideras som anv'ndare ")
+	// Get user ID from URL params
+	const userId = req.params.userId;
+	console.log(userId)
+
+	// Compare user ID in token with user ID in URL params
+	if (!req.token || req.token.sub !== Number(userId)) {
+		console.log(req.token, userId)
+		return res.status(403).json({ error: "Forbidden: User not authorized" });
+
+	}
+
+	next();
+}; */

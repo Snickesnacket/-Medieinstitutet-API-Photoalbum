@@ -12,5 +12,5 @@ export const updateAlbumRules = [
 ]
 
 export const createPhotosToAlbumRules = [
-    body('photoId').exists().bail().withMessage({ message: "photo dosent exist" }).isInt().withMessage({ message: "PhotoId is not integer" }),
+    body('photoId').exists().bail().isInt().withMessage({ message: "PhotoId is not integer" }),
 ]

@@ -10,7 +10,7 @@ import { fail } from 'assert'
 
 
 // Create a new debug instance
-const debug = Debug('prisma-books:album_controller')
+const debug = Debug('PHOTOALBUM:album_controller')
 
 /**
  * Get all albums
@@ -18,16 +18,10 @@ const debug = Debug('prisma-books:album_controller')
 export const index = async (req: Request, res: Response) => {
 
 	try {
-		const user = await prisma.user.findUnique({
-			where: { id: Number(req.params.userId) }
-		});
 
-		if (!user) {
-			return res.status(404).json({ message: 'User not found' });
-		}
 		const albums = await getAlbums()
 
-		res.send({ // USES FINDMANY AND NOTHING MORE 
+		res.send({
 			status: "success",
 			data: albums
 		})
@@ -45,14 +39,6 @@ export const show = async (req: Request, res: Response) => {
 	const albumId = Number(req.params.albumId)
 
 	try {
-		const user = await prisma.user.findUnique({
-			where: { id: Number(req.params.userId) }
-		});
-
-		if (!user) {
-			return res.status(404).json({ message: 'User not found' });
-		}
-
 		const album = await getAlbum(albumId)
 
 		res.send({
@@ -70,40 +56,29 @@ export const show = async (req: Request, res: Response) => {
  * Create a album
  */
 
-export const store = async (req: Request, res: Response) => {
-	/* 	const validationErrors = validationResult(req)
-	
-		if (!validationErrors.isEmpty()) {
-			return res.status(400).send({
-				status: "fail",
-				message: validationErrors.array(),
-			})
-		}
-		const validatedData = matchedData(req) */
+export const storeAlbum = async (req: Request, res: Response) => {
+	const validationErrors = validationResult(req)
+
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			message: validationErrors.array(),
+		})
+	}
+	const validatedData = matchedData(req)
 
 	try {
-		const user = await prisma.user.findUnique({
-			where: { id: Number(req.params.userId) }
-		});
-
-		if (!user) {
-			return res.status(404).json({ message: 'User not found' });
-		}
-
-		const album = await createAlbum({
-			title: req.body.title,
-			userId: user.id
-		});
+		const album = await createAlbum(req.token!.sub, req.body.title)
 
 		return res.status(201).json({
 			status: "success",
 			data: album,
-		});
+		})
 	} catch (err) {
-		console.error(err);
-		return res.status(500).json({ message: 'Internal server error' });
+		console.error(err)
+		return res.status(500).json({ message: 'Internal server error' })
 	}
-};
+}
 
 
 /**

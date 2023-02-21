@@ -6,7 +6,6 @@ import internal from "stream"
 
 type CreateAlbumData = {
 	title: string,
-	userId: number
 }
 export type CreatePhotoData = {
 	title: string

@@ -9,14 +9,15 @@ import { CreatePhotoData } from "../types"
  */
 
 export const createPhoto = async (data: CreatePhotoData) => {
-    const { title, url, comment, user } = data;
+    const { title, url, comment, user_id, id } = data;
 
     return await prisma.photo.create({
         data: {
             title,
             url,
             comment,
-            user
+            user_id,
+            id,
         }
     });
 };

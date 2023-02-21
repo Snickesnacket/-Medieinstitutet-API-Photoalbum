@@ -5,21 +5,31 @@ import Debug from 'debug'
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { JwtPayload } from '../../types'
+import prisma from '../../prisma'
+import { getUserById } from '../../services/user_service'
 
 const debug = Debug('PHOTOALBUM:jwt')
 
+// validate photo user 
 
-export const validateUser = (req: Request, res: Response, next: NextFunction) => {
-	console.log("valideras som anv'ndare ")
-	// Get user ID from URL params
-	const userId = req.params.userId;
-	console.log(userId)
+// get user_id from jwt token and match with photo_id 
 
-	// Compare user ID in token with user ID in URL params
-	if (!req.token || req.token.sub !== Number(userId)) {
-		console.log(req.token, userId)
-		return res.status(403).json({ error: "Forbidden: User not authorized" });
+//decrypt jwt token ang get user_id and continue if true.
 
+
+// use it to call validate user or other function. 
+
+
+
+
+export const validateUser = async (req: Request, res: Response, next: NextFunction) => {
+	// User has authenticated successfully
+	const user = await getUserById(req.token!.sub)
+	if (!user) {
+		return res.status(401).send({
+			status: "fail",
+			data: "Access denied",
+		})
 	}
 
 	next();
