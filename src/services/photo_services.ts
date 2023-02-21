@@ -1,6 +1,6 @@
 import { userInfo } from "os";
 import prisma from "../prisma"
-import { CreatePhotoData } from "../types"
+import { CreatePhotoData, UpdatePhotoData } from "../types"
 
 /**
  * Create a user
@@ -57,7 +57,19 @@ export const getPhoto = async (photoId: number) => {
             comment: true
         }
     })
+
 }
+
+export const updatePhoto = async (photoId: number, userData: UpdatePhotoData) => {
+    return await prisma.photo.update({
+        where: {
+            id: photoId,
+        },
+        data: userData
+    })
+}
+
+
 
 /* export const createPhoto = async (data: CreatePhotoData) => {
 

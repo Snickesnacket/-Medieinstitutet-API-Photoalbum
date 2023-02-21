@@ -1,7 +1,7 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
-import { validationResult } from 'express-validator'
-import { getPhotos, getPhoto, createPhoto } from '../services/photo_services'
+import { matchedData, validationResult } from 'express-validator'
+import { getPhotos, getPhoto, createPhoto, updatePhoto } from '../services/photo_services'
 import prisma from '../prisma'
 
 
@@ -83,16 +83,28 @@ export const photoStore = async (req: Request, res: Response) => {
 /**
  * Update a resource
  */
-export const photoUpdate = async (req: Request, res: Response) => {
+export const update = async (req: Request, res: Response) => {
+    // Check for any validation errors
+    const validationErrors = validationResult(req)
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).send({
+            status: "fail",
+            data: validationErrors.array(),
+        })
+    }
+    const validatedData = matchedData(req)
+    const photoId = Number(req.params.photoId)
 
-    const user = await prisma.user.findUnique({
-        where: { id: Number(req.params.userId) }
-    });
+    try {
+        const userData = await updatePhoto(req.token!.sub, validatedData)
+        console.log("this is userData", userData)
+        res.send({ status: "success", data: userData })
 
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+    } catch (err) {
+        return res.status(500).send({ message: "Something went wrong" })
     }
 }
+
 
 /**
  * Delete a resource

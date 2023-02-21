@@ -3,12 +3,15 @@ import users from './users'
 import { validateToken, validateUser } from '../middlewares/auth/jwt'
 import { registerUserRules, loginUserRules } from '../validations/user_rules'
 import { register, login, } from '../controllers/user_controller'
-import { body } from "express-validator"
 import { addphoto, index, show, storeAlbum, update } from "../controllers/album_controller"
 import { getUserById } from "../services/user_service"
 import { createPhotosToAlbumRules } from "../validations/album_rules"
-import { updatePhotoRules } from "../validations/photo_rules"
-import { photoIndex, photoShow, photoStore, photoUpdate } from "../controllers/photo_controller"
+import { photoIndex, photoShow, photoStore, } from "../controllers/photo_controller"
+import { body } from 'express-validator';
+import { Request, Response } from 'express'
+import { PatchPhoto } from "../validations/All_validations"
+
+
 
 
 // instantiate a new router
@@ -25,7 +28,7 @@ router.get('/', (req, res) => {
 
 
 /**
- * GET /users photos from album
+ * GET /users photos 
  */
 router.get('/photos',
 	validateToken,
@@ -33,7 +36,7 @@ router.get('/photos',
 	photoIndex)
 
 /**
- * GET /users photo from album
+ * GET /users photos
  */
 
 router.get('/photos/:photoId', validateToken,
@@ -44,7 +47,7 @@ router.get('/photos/:photoId', validateToken,
 	photoShow)
 
 /**
- * POST /post a new photo to an album
+ * POST /post a new photo
  */
 router.post('/photos',
 	validateToken,
@@ -57,13 +60,13 @@ router.post('/photos',
 	photoStore)
 
 /**
- * PATCH /resource/:resourceId
+ * PATCH/photos/:photoId
  */
-router.patch('/albums/:albumId/photos/:photoId', validateToken,
-	validateUser, updatePhotoRules, photoUpdate)
+router.patch('/photos/:photoId',
+	validateToken,
+	validateUser,
 
-
-
+	update);
 
 
 
