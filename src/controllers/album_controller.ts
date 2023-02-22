@@ -1,6 +1,7 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
+import { JwtPayload } from '../types'
 import { addOnePhoto, connectPhotosToAlbum, createAlbum, getAlbum, getAlbums, updateAlbum } from '../services/album_service'
 
 
@@ -57,7 +58,7 @@ export const albumShow = async (req: Request, res: Response) => {
  */
 export const albumStore = async (req: Request, res: Response) => {
 	const validationErrors = validationResult(req)
-
+	console.log('hello! from albumStore')
 	if (!validationErrors.isEmpty()) {
 		return res.status(400).send({
 			status: "fail",

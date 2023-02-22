@@ -72,7 +72,6 @@ export const updatePhoto = async (photoId: number, userId: number, userData: Upd
     if (!photo) {
         throw new Error(`Photo with ID ${photoId} not found`);
     }
-    console.log(photo.user_id, userId)
     if (photo.user_id !== userId) {
         throw new Error(`User with ID ${userId} is not authorized to update photo ${photoId}`);
     }
