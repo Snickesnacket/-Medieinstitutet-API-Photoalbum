@@ -5,7 +5,6 @@ import Debug from 'debug'
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { JwtPayload } from '../../types'
-import prisma from '../../prisma'
 import { getUserById } from '../../services/user_service'
 
 const debug = Debug('PHOTOALBUM:jwt')
@@ -23,7 +22,6 @@ const debug = Debug('PHOTOALBUM:jwt')
 
 
 export const validateUser = async (req: Request, res: Response, next: NextFunction) => {
-	console.log("Hello from user validation")
 	// User has authenticated successfully
 	const user = await getUserById(req.token!.sub)
 	if (!user) {
@@ -43,7 +41,6 @@ export const validateUser = async (req: Request, res: Response, next: NextFuncti
  */
 export const validateToken = (req: Request, res: Response, next: NextFunction) => {
 	debug("Hello from auth/jwt!")
-	console.log("valideras")
 
 
 	// Make sure Authorization header exists, otherwise bail 🛑

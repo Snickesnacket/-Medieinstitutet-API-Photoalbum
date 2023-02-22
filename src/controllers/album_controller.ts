@@ -75,8 +75,7 @@ export const albumStore = async (req: Request, res: Response) => {
 			data: album,
 		})
 	} catch (err) {
-		console.error(err)
-		return res.status(500).send({ message: 'Internal server error' })
+		return res.status(400).send({ message: 'Internal server error' })
 	}
 }
 
@@ -98,12 +97,10 @@ export const addphoto = async (req: Request, res: Response) => {
 	const validatedData = matchedData(req)
 
 	const albumId = Number(req.params.albumId)
-	console.log("blejfoihe")
+
 	try {
 
 		const album = await addOnePhoto(req.token!.sub, albumId, validatedData.photo_id);
-
-		console.log("userId and sub",)
 
 		if (!album) {
 			return res.status(400).send({ message: 'Album not found' });
@@ -118,7 +115,7 @@ export const addphoto = async (req: Request, res: Response) => {
 		debug("Error thrown when creating a album %o: %o", req.body, err)
 		console.error(err)
 
-		res.status(500).send({ status: "error", message: "Something went wrong adding the photo to the album" })
+		res.status(400).send({ status: "error", message: "Something went wrong adding the photo to the album" })
 	}
 }
 /**
@@ -142,7 +139,7 @@ export const albumUpdate = async (req: Request, res: Response) => {
 		res.send({ status: "success", data: userData })
 
 	} catch (err) {
-		return res.status(500).send({ message: "Something went wrong" })
+		return res.status(400).send({ message: "Something went wrong" })
 	}
 }
 
@@ -174,8 +171,7 @@ export const albumPostMany = async (req: Request, res: Response) => {
 			data: null,
 		});
 	} catch (error) {
-		console.error(error);
-		res.status(500).send({
+		res.status(400).send({
 			status: "error",
 			message: "Something went wrong",
 		});

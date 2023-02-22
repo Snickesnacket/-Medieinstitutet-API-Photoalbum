@@ -1,11 +1,5 @@
 import prisma from '../prisma'
-import Debug from 'debug'
-import { updateAlbumData } from '../types'
-import { JwtPayload } from '../types'
-import { Request, Response } from 'express'
-import { title } from 'process'
 
-const debug = Debug('PHOTOALBUM:album_services')
 /**
  * Get all albums
  */
@@ -70,7 +64,7 @@ export const createAlbum = async (userId: number, title: string) => {
  * Update Album
  */
 export const updateAlbum = async (albumId: number, userId: number, title: string) => {
-	console.log("tjosan från mig")
+
 	const album = await prisma.album.findUnique({
 		where: {
 			id: albumId,
@@ -83,7 +77,7 @@ export const updateAlbum = async (albumId: number, userId: number, title: string
 	if (!album) {
 		throw new Error(`Album with ID ${albumId} not found`);
 	}
-	console.log(album.user_id, userId)
+
 	if (album.user_id !== userId) {
 		throw new Error(`User with ID ${userId} is not authorized to add photo to album with ID ${albumId}`);
 	}
@@ -104,7 +98,7 @@ export const updateAlbum = async (albumId: number, userId: number, title: string
 }
 
 export const addOnePhoto = async (userId: number, albumId: number, photo_id: number) => {
-	console.log("tjosan från mig")
+
 	const album = await prisma.album.findUnique({
 		where: {
 			id: albumId,
@@ -117,7 +111,7 @@ export const addOnePhoto = async (userId: number, albumId: number, photo_id: num
 	if (!album) {
 		throw new Error(`Album with ID ${albumId} not found`);
 	}
-	console.log(album.user_id, userId)
+
 	if (album.user_id !== userId) {
 		throw new Error(`User with ID ${userId} is not authorized to add photo to album with ID ${albumId}`);
 	}
