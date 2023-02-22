@@ -33,7 +33,7 @@ router.patch('/:photoId',
 /**
 * DELETE A PHOTO 
 */
-router.delete('/photos/:photoId/',
+router.delete('/photos/:photoId',
     deletePhoto)
 
 export default router

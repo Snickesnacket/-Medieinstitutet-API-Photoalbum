@@ -60,7 +60,7 @@ router.delete('/albums/:albumId/photos/:photoId',
 /**
  * DELETE AN ALBUM
  */
-router.delete('/albums/:albumId/',
+router.delete('/albums/:albumId',
     deleteAlbum)
 
 
