@@ -14,7 +14,7 @@ export const photoIndex = async (req: Request, res: Response) => {
         const photos = await getPhotos(req.token!.sub)
         console.log("users id", req.token!.sub)
 
-        res.send({ // USES FINDMANY AND NOTHING MORE 
+        res.send({
             status: "success",
             data: photos
         })
@@ -35,7 +35,7 @@ export const photoShow = async (req: Request, res: Response) => {
         const photo = await getPhoto(photoId, req.token!.sub)
 
         if (!photo) {
-            return res.status(404).json({ message: 'Photo not found' });
+            return res.status(400).send({ message: 'Photo not found' });
         }
 
         res.send({
@@ -45,9 +45,8 @@ export const photoShow = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error thrown when finding photo with id %o: %o", req.params.photoId, err)
-        return res.status(404).send({ status: "error", message: "Not found" })
+        return res.status(404).send({ status: "error", message: "Photo Not found" })
     }
-
 }
 
 /**
@@ -67,13 +66,13 @@ export const photoStore = async (req: Request, res: Response) => {
     try {
         const photo = await createPhoto(req.token!.sub, validatedData.title, validatedData.url, validatedData.comment);
 
-        return res.status(201).json({
+        return res.status(200).send({
             status: "success",
             data: photo,
         });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).send({ message: 'Internal server error' });
     }
 };
 
@@ -110,8 +109,3 @@ export const photoUpdate = async (req: Request, res: Response) => {
     }
 }
 
-/**
- * Delete a photo
- */
-export const destroy = async (req: Request, res: Response) => {
-}

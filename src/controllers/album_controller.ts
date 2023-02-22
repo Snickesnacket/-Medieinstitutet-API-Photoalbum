@@ -2,7 +2,7 @@ import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import { addOnePhoto, connectPhotosToAlbum, createAlbum, getAlbum, getAlbums, updateAlbum } from '../services/album_service'
-import prisma from '../prisma'
+
 
 
 
@@ -35,7 +35,11 @@ export const albumShow = async (req: Request, res: Response) => {
 	const albumId = Number(req.params.albumId)
 
 	try {
-		const album = await getAlbum(albumId, req.token!.sub)
+		const album = await getAlbum(req.token!.sub, albumId)
+
+		if (!album) {
+			return res.status(400).send({ message: 'Album not found' });
+		}
 
 		res.send({
 			status: "success",
@@ -43,8 +47,8 @@ export const albumShow = async (req: Request, res: Response) => {
 		})
 
 	} catch (err) {
-		debug("Error thrown when finding book with id %o: %o", req.params.albumId, err)
-		return res.status(404).send({ status: "error", message: "Not found" })
+		debug("Error thrown when finding album with id %o: %o", req.params.albumId, err)
+		return res.status(404).send({ status: "error", message: "Album Not found" })
 	}
 }
 
@@ -63,19 +67,16 @@ export const albumStore = async (req: Request, res: Response) => {
 	const validatedData = matchedData(req)
 
 	try {
+
 		const album = await createAlbum(req.token!.sub, validatedData.title)
 
-		if (!album) {
-			return res.status(404).json({ message: 'Album not found' });
-		}
-
-		return res.status(201).json({
+		return res.status(200).send({
 			status: "success",
 			data: album,
 		})
 	} catch (err) {
 		console.error(err)
-		return res.status(500).json({ message: 'Internal server error' })
+		return res.status(500).send({ message: 'Internal server error' })
 	}
 }
 
@@ -92,17 +93,20 @@ export const addphoto = async (req: Request, res: Response) => {
 		})
 	}
 
+
+
 	const validatedData = matchedData(req)
 
 	const albumId = Number(req.params.albumId)
-
-
+	console.log("blejfoihe")
 	try {
-		console.log("this is req.body.photo_id", validatedData.photo_id, albumId)
-		const album = await addOnePhoto(req.token!.sub, albumId, validatedData.photo_id)
+
+		const album = await addOnePhoto(req.token!.sub, albumId, validatedData.photo_id);
+
+		console.log("userId and sub",)
 
 		if (!album) {
-			return res.status(404).json({ message: 'Album not found' });
+			return res.status(400).send({ message: 'Album not found' });
 		}
 
 		res.status(200).send({
@@ -113,11 +117,10 @@ export const addphoto = async (req: Request, res: Response) => {
 	} catch (err) {
 		debug("Error thrown when creating a album %o: %o", req.body, err)
 		console.error(err)
+
 		res.status(500).send({ status: "error", message: "Something went wrong adding the photo to the album" })
 	}
-
 }
-
 /**
  * Patch an album
  */
@@ -134,7 +137,7 @@ export const albumUpdate = async (req: Request, res: Response) => {
 	const albumId = Number(req.params.albumId)
 
 	try {
-		const userData = await updateAlbum(albumId, req.token!.sub, validatedData)
+		const userData = await updateAlbum(albumId, req.token!.sub, validatedData.title)
 
 		res.send({ status: "success", data: userData })
 

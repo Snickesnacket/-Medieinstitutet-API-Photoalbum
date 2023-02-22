@@ -1,7 +1,9 @@
 import prisma from '../prisma'
 import Debug from 'debug'
-import { createPhototoAlbumData, updateAlbumData } from '../types'
-import { albumIndex } from '../controllers/album_controller'
+import { updateAlbumData } from '../types'
+import { JwtPayload } from '../types'
+import { Request, Response } from 'express'
+import { title } from 'process'
 
 const debug = Debug('PHOTOALBUM:album_services')
 /**
@@ -24,21 +26,12 @@ export const getAlbums = async (userId: number) => {
 /**
  * Get a single album
  */
-export const getAlbum = async (albumId: number, userId: number) => {
+export const getAlbum = async (userId: number, albumId: number) => {
 
-	const user = await prisma.user.findUnique({
-		where: {
-			id: userId,
-		},
-	})
-
-	if (!user) {
-		throw new Error(`User with ID ${userId} not found`)
-	}
 	return await prisma.album.findFirst({
 		where: {
 			id: albumId,
-
+			user_id: userId
 		},
 		include: {
 			photos: {
@@ -60,22 +53,13 @@ export const getAlbum = async (albumId: number, userId: number) => {
  * Create Album
  */
 export const createAlbum = async (userId: number, title: string) => {
-	const user = await prisma.user.findUnique({
-		where: {
-			id: userId,
-		},
-	})
-
-	if (!user) {
-		throw new Error(`User with ID ${userId} not found`)
-	}
 
 	return await prisma.album.create({
 		data: {
 			title,
 			user: {
 				connect: {
-					id: user.id,
+					id: userId,
 				},
 			},
 		},
@@ -85,16 +69,23 @@ export const createAlbum = async (userId: number, title: string) => {
 /**
  * Update Album
  */
-export const updateAlbum = async (albumId: number, userId: number, userData: updateAlbumData) => {
-
-	const user = await prisma.user.findUnique({
+export const updateAlbum = async (albumId: number, userId: number, title: string) => {
+	console.log("tjosan från mig")
+	const album = await prisma.album.findUnique({
 		where: {
-			id: userId,
+			id: albumId,
 		},
-	})
+		include: {
+			user: true,
+		},
+	});
 
-	if (!user) {
-		throw new Error(`User with ID ${userId} not found`)
+	if (!album) {
+		throw new Error(`Album with ID ${albumId} not found`);
+	}
+	console.log(album.user_id, userId)
+	if (album.user_id !== userId) {
+		throw new Error(`User with ID ${userId} is not authorized to add photo to album with ID ${albumId}`);
 	}
 
 	return await prisma.album.update({
@@ -102,30 +93,38 @@ export const updateAlbum = async (albumId: number, userId: number, userData: upd
 			id: albumId,
 		},
 		data: {
-			...userData,
+			title,
 			user: {
-				connect: { id: userId }
+				connect: {
+					id: userId
+				}
 			}
 		}
 	})
 }
 
 export const addOnePhoto = async (userId: number, albumId: number, photo_id: number) => {
-
-	const user = await prisma.user.findUnique({
+	console.log("tjosan från mig")
+	const album = await prisma.album.findUnique({
 		where: {
-			id: userId,
+			id: albumId,
 		},
-	})
+		include: {
+			user: true,
+		},
+	});
 
-	if (!user) {
-		throw new Error(`User with ID ${userId} not found`)
+	if (!album) {
+		throw new Error(`Album with ID ${albumId} not found`);
+	}
+	console.log(album.user_id, userId)
+	if (album.user_id !== userId) {
+		throw new Error(`User with ID ${userId} is not authorized to add photo to album with ID ${albumId}`);
 	}
 
 	return await prisma.album.update({
-
 		where: {
-			id: albumId
+			id: albumId,
 		},
 		data: {
 			photos: {
@@ -134,21 +133,33 @@ export const addOnePhoto = async (userId: number, albumId: number, photo_id: num
 				},
 			},
 		},
-	})
-}
+	});
+};
+
+
+
+
 
 
 
 export async function connectPhotosToAlbum(userId: number, albumId: number, photo_id: number[]) {
 
-	const user = await prisma.user.findUnique({
+	console.log("tjosan från mig")
+	const album = await prisma.album.findUnique({
 		where: {
-			id: userId,
+			id: albumId,
 		},
-	})
+		include: {
+			user: true,
+		},
+	});
 
-	if (!user) {
-		throw new Error(`User with ID ${userId} not found`)
+	if (!album) {
+		throw new Error(`Album with ID ${albumId} not found`);
+	}
+	console.log(album.user_id, userId)
+	if (album.user_id !== userId) {
+		throw new Error(`User with ID ${userId} is not authorized to add photo to album with ID ${albumId}`);
 	}
 	return prisma.album.update({
 		where: {
