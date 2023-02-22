@@ -54,13 +54,13 @@ router.post('/:albumId/photos',
 /**
 * DELETE A PHOTO  OF AN ALBUM
 */
-router.delete('/albums/:albumId/photos/:photoId',
+router.delete('/:albumId/photos/:photoId',
     deletePhotoAlbum)
 
 /**
  * DELETE AN ALBUM
  */
-router.delete('/albums/:albumId',
+router.delete('/:albumId',
     deleteAlbum)
 
 
