@@ -1,6 +1,5 @@
 import express from 'express'
-import { deletePhotoAlbum } from '../controllers/album_controller'
-import { photoIndex, photoShow, photoStore, photoUpdate } from '../controllers/photo_controller'
+import { deletePhoto, photoIndex, photoShow, photoStore, photoUpdate } from '../controllers/photo_controller'
 import { PatchPhoto, PostPhoto } from '../validations/All_validations'
 const router = express.Router()
 
@@ -15,7 +14,6 @@ router.get('/',
  */
 
 router.get('/:photoId',
-    getUsersPhotos,
     photoShow)
 
 /**
@@ -36,6 +34,6 @@ router.patch('/:photoId',
 * DELETE A PHOTO 
 */
 router.delete('/photos/:photoId/',
-    deletePhotoAlbum)
+    deletePhoto)
 
 export default router
