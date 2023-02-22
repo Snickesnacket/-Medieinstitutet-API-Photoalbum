@@ -1,10 +1,10 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
-import { getPhotos, getPhoto, createPhoto, updatePhoto } from '../services/photo_services'
+import { getPhotos, getPhoto, createPhoto, updatePhoto, removePhoto } from '../services/photo_services'
 
 // Create a new debug instance
-const debug = Debug('prisma-boilerplate:I_AM_LAZY_AND_HAVE_NOT_CHANGED_THIS_😛')
+const debug = Debug('prisma-boilerplate:photo_controller')
 
 /**
  * Get all photos 
@@ -71,7 +71,7 @@ export const photoStore = async (req: Request, res: Response) => {
         });
     } catch (err) {
         console.error(err);
-        return res.status(400).send({ message: 'Internal server error' });
+        return res.status(400).send({ status: "fail", message: 'Internal server error' });
     }
 };
 
@@ -102,7 +102,30 @@ export const photoUpdate = async (req: Request, res: Response) => {
         res.send({ status: "success", data: userData })
 
     } catch (err) {
-        return res.status(400).send({ message: "Something went wrong" })
+        return res.status(400).send({ status: "fail", message: "Something went wrong" })
     }
 }
+
+/**
+ * Delete a photo
+ */
+export const deletePhoto = async (req: Request, res: Response) => {
+    try {
+        const photoId = Number(req.params.photoId)
+
+        await removePhoto(req.token!.sub, photoId,)
+
+        return res.status(200).send({
+            status: "success",
+            data: null,
+        });
+
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ status: "error", message: "Something went wrong" });
+    }
+}
+
+
 

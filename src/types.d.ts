@@ -11,12 +11,12 @@ export type CreatePhotoData = {
 	title: string
 	url: string
 	comment?: string
-	userId: Int
-	id: int
+	userId: number
+	id: number
 }
 export type createPhototoAlbumData = {
-	photo_id: int,
-	albumId: int
+	photo_id: number,
+	albumId: number
 }
 export type CreateUserData = {
 	email: string,
@@ -43,4 +43,12 @@ export type UpdatePhotoData = {
 	title: string,
 	url: string,
 	comment: string,
+}
+
+export type AlbumPhotoDelete = {
+	photos?: {
+		disconnect?: {
+			id: number;
+		};
+	};
 }

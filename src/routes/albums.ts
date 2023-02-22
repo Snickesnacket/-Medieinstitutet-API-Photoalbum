@@ -1,5 +1,5 @@
 import express from 'express'
-import { addphoto, albumIndex, albumPostMany, albumShow, albumStore, albumUpdate } from '../controllers/album_controller'
+import { addphoto, albumIndex, albumPostMany, albumShow, albumStore, albumUpdate, deleteAlbum, deletePhotoAlbum } from '../controllers/album_controller'
 import { addPhototoAlbum, patchAlbum, postAlbums, postToAlbumsPhotos } from '../validations/All_validations'
 const router = express.Router()
 
@@ -24,15 +24,15 @@ router.post('/',
  */
 router.patch('/:albumId',
     patchAlbum,
-    albumUpdate),
+    albumUpdate)
 
-    /**
-     * GET /users album
-     */
+/**
+ * GET /users album
+ */
 
-    router.get('/:albumId',
-        albumShow,
-    )
+router.get('/:albumId',
+    albumShow,
+)
 
 /**
  * POST / ADD A PHOTO TO AN ALBUM 
@@ -40,7 +40,7 @@ router.patch('/:albumId',
 router.post('/:albumId/photo',
     addPhototoAlbum,
     addphoto,
-);
+)
 
 // VG 
 /**
@@ -49,5 +49,19 @@ router.post('/:albumId/photo',
 router.post('/:albumId/photos',
     postToAlbumsPhotos,
     albumPostMany)
+
+
+/**
+* DELETE A PHOTO  OF AN ALBUM
+*/
+router.delete('/albums/:albumId/photos/:photoId',
+    deletePhotoAlbum)
+
+/**
+ * DELETE AN ALBUM
+ */
+router.delete('/albums/:albumId/',
+    deleteAlbum)
+
 
 export default router

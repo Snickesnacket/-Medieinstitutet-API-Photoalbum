@@ -9,23 +9,6 @@ import { createUser, getUserByEmail } from './../services/user_service';
 const debug = Debug('prisma-books:user_controller')
 
 /**
- * Get the authenticated user's profile
- */
-export const getProfile = async (req: Request, res: Response) => {
-	// User has authenticated successfully
-	const profile = await getUserByEmail(req.token!.email)
-
-	res.send({
-		status: "success",
-		data: {
-			id: profile?.id,
-			first_name: profile?.first_name,
-			email: profile?.email,
-		},
-	})
-}
-
-/**
  * Login a user
  */
 export const login = async (req: Request, res: Response) => {
@@ -106,11 +89,9 @@ export const register = async (req: Request, res: Response) => {
 
 	// Get only the validated data from the request
 	const validatedData = matchedData(req)
-	console.log("validatedData:", validatedData)
 
 	// Calculate a hash + salt for the password
 	const hashedPassword = await bcrypt.hash(validatedData.password, Number(process.env.SALT_ROUNDS) || 10)
-
 
 	// Replace password with hashed password
 	validatedData.password = hashedPassword
@@ -205,8 +186,5 @@ export const refresh = (req: Request, res: Response) => {
 
 }
 
-module.exports = {
-	register,
-	login,
-	refresh
-}
+
+

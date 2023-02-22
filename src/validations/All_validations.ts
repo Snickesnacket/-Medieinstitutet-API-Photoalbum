@@ -1,8 +1,5 @@
 import { body } from 'express-validator'
 
-export const getUsersPhotos = [
-    body('photo_id').exists().isInt().withMessage({ message: "PhotoId is not integer" }),
-]
 
 export const PostPhoto = [
     body('title').isString().isLength({ min: 3 }),
@@ -31,3 +28,4 @@ export const addPhototoAlbum = [
 export const postToAlbumsPhotos = [
     body('photo_id').exists().isInt().withMessage({ message: "PhotoId is not integer" }),
 ]
+

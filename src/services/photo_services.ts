@@ -75,7 +75,7 @@ export const updatePhoto = async (photoId: number, userId: number, userData: Upd
     if (photo.user_id !== userId) {
         throw new Error(`User with ID ${userId} is not authorized to update photo ${photoId}`);
     }
-    console.error()
+
     return await prisma.photo.update({
         where: {
             id: photoId,
@@ -87,4 +87,30 @@ export const updatePhoto = async (photoId: number, userId: number, userData: Upd
             }
         }
     })
+}
+
+
+export const removePhoto = async (userId: number, photoId: number) => {
+    const photo = await prisma.photo.findUnique({
+        where: {
+            id: photoId,
+        },
+        include: {
+            user: true,
+        },
+    });
+
+    if (!photo) {
+        throw new Error(`Photo with ID ${photoId} not found`);
+    }
+
+    if (photo.user_id !== userId) {
+        throw new Error(`User with ID ${userId} is not authorized to add photo to album with ID ${photoId}`);
+    }
+
+    return await prisma.photo.delete({
+        where: {
+            id: photoId,
+        },
+    });
 }
