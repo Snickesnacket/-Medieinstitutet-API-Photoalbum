@@ -47,6 +47,7 @@ export const getAlbum = async (userId: number, albumId: number) => {
  * Create Album
  */
 export const createAlbum = async (userId: number, title: string) => {
+	console.log('hello it is me!')
 
 	return await prisma.album.create({
 		data: {
@@ -138,7 +139,6 @@ export const addOnePhoto = async (userId: number, albumId: number, photo_id: num
 
 export async function connectPhotosToAlbum(userId: number, albumId: number, photo_id: number[]) {
 
-	console.log("tjosan från mig")
 	const album = await prisma.album.findUnique({
 		where: {
 			id: albumId,
@@ -167,33 +167,3 @@ export async function connectPhotosToAlbum(userId: number, albumId: number, phot
 	});
 }
 
-/* export const removePhoto = async (userId: number, albumId: number, photoId: number) => {
-
-	const user = await prisma.user.findUnique({
-		where: {
-			id: userId,
-		},
-	})
-
-	if (!user) {
-		throw new Error(`User with ID ${userId} not found`)
-	}
-	return
-	await prisma.photo.delete({
-		where: {
-			id: photoId,
-		},
-	});
-	await prisma.album.update({
-		where: {
-			id: albumId,
-		},
-		data: {
-			_count: {
-				decrement: {
-					photos: 1,
-				},
-			},
-		},
-	}) 
-} */

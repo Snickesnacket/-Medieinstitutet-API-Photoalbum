@@ -1,61 +1,53 @@
-/* import express from 'express'
-import { index, show, addphoto, update } from '../controllers/album_controller'
-const router = express.Router() */
-//import { createAlbumRules, updateAlbumRules, createPhotosToAlbumRules } from "../validations/album_rules"
-
-
+import express from 'express'
+import { addphoto, albumIndex, albumPostMany, albumShow, albumStore, albumUpdate } from '../controllers/album_controller'
+import { addPhototoAlbum, patchAlbum, postAlbums, postToAlbumsPhotos } from '../validations/All_validations'
+const router = express.Router()
 
 /**
  * GET /users albums
  */
-//router.get('/users/:userId/albums', index)
+
+router.get('/',
+    albumIndex
+)
 /**
- * GET /users albums
- */
-/**
- * GET /users album
+ * POST /users albums
  */
 
-//router.get('/users/:userId/albums/:albumId', show)
-/**
- * GET /users albums
- */
-/**
- * GET /users album
- */
-/**
- * POST /post a new album
- */
-//router.post('/users/:userId', createAlbumRules, store);
-/**
- * GET /users albums
- */
-/**
- * GET /users album
- */
-/**
- * POST /post a new album
- */
+router.post('/',
+    postAlbums,
+    albumStore
+)
+
 /**
  * PATCH /post a new album
  */
-//router.patch('/users/:userId/albums/:albumId', updateAlbumRules, update)
-/**
- * GET /users albums
- */
-/**
- * GET /users album
- */
-/**
- * POST /post a new album
- */
-/**
- * PATCH /post a new album
- */
-/**
- * POST / ADD A PHOTO TO AN ALBUM
- */
-//router.post('/users/:userId/albums/:albumId/photos', createPhotosToAlbumRules, addphoto)
+router.patch('/:albumId',
+    patchAlbum,
+    albumUpdate),
 
+    /**
+     * GET /users album
+     */
 
-//export default router
+    router.get('/:albumId',
+        albumShow,
+    )
+
+/**
+ * POST / ADD A PHOTO TO AN ALBUM 
+ */
+router.post('/:albumId/photo',
+    addPhototoAlbum,
+    addphoto,
+);
+
+// VG 
+/**
+ * POST A PHOTO TO AN ALBUM
+ */
+router.post('/:albumId/photos',
+    postToAlbumsPhotos,
+    albumPostMany)
+
+export default router

@@ -177,33 +177,3 @@ export const albumPostMany = async (req: Request, res: Response) => {
 		});
 	}
 }
-
-/* export const deletePhoto = async (req: Request, res: Response) => {
-	// Check for any validation errors
-	const validationErrors = validationResult(req)
-	if (!validationErrors.isEmpty()) {
-		return res.status(400).send({
-			status: "fail",
-			data: validationErrors.array(),
-		})
-	}
-
-	const validatedData = matchedData(req)
-	try {
-		const albumId = Number(req.params.albumId);
-		const photo_id = validatedData.photo_id;
-
-		await removePhoto(req.token!.sub, albumId, photo_id)
-
-		return res.status(200).send({
-			status: "success",
-			data: null,
-		});
-
-
-	} catch (err) {
-		console.error(err);
-		res.status(500).send({ message: "Something went wrong" });
-	}
-};
- */

@@ -1,29 +1,34 @@
-/* import express from 'express'
-import { body } from 'express-validator'
-import { index, show, store, update, } from '../controllers/photo_controller'
-import { createPhotoRules, updatePhotoRules } from '../validations/photo_rules'
+import express from 'express'
+import { photoIndex, photoShow, photoStore, photoUpdate } from '../controllers/photo_controller'
+import { getUsersPhotos, PatchPhoto, PostPhoto } from '../validations/All_validations'
 const router = express.Router()
- */
-/**
- * GET /users photos from album
- */
-//router.get('/:userId/photos', index)
 
 /**
- * GET /users photo from album
- */
+     * GET /users photos
+     */
+router.get('/',
+    photoIndex),
 
-//router.get('/:userId/photos/:photoId', show)
+    /**
+     * GET /users photo
+     */
 
-/**
- * POST /post a new photo to an album
- */
-//router.post('/:userId/albums/:albumId/photos', createPhotoRules, store)
+    router.get('/:photoId',
+        getUsersPhotos,
+        photoShow),
 
-/**
- * PATCH /resource/:resourceId
- */
-//router.patch('/:userId/albums/:albumId/photos/:photoId', updatePhotoRules, update)
+    /**
+     * POST /post a new photo
+     */
+    router.post('/',
+        PostPhoto,
+        photoStore),
 
+    /**
+     * PATCH/photos/:photoId
+     */
+    router.patch('/:photoId',
+        PatchPhoto,
+        photoUpdate);
 
-//export default router
+export default router

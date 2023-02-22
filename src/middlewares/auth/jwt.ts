@@ -9,18 +9,6 @@ import { getUserById } from '../../services/user_service'
 
 const debug = Debug('PHOTOALBUM:jwt')
 
-// validate photo user 
-
-// get user_id from jwt token and match with photo_id 
-
-//decrypt jwt token ang get user_id and continue if true.
-
-
-// use it to call validate user or other function. 
-
-
-
-
 export const validateUser = async (req: Request, res: Response, next: NextFunction) => {
 	// User has authenticated successfully
 	const user = await getUserById(req.token!.sub)
