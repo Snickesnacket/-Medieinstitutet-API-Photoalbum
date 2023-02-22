@@ -1,8 +1,9 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
-import { connectPhotosToAlbum, createAlbum, getAlbum, getAlbums, updateAlbum } from '../services/album_service'
+import { addOnePhoto, connectPhotosToAlbum, createAlbum, getAlbum, getAlbums, updateAlbum } from '../services/album_service'
 import prisma from '../prisma'
+
 
 
 // Create a new debug instance
@@ -95,27 +96,24 @@ export const addphoto = async (req: Request, res: Response) => {
 
 	const albumId = Number(req.params.albumId)
 
+
 	try {
 		console.log("this is req.body.photo_id", validatedData.photo_id, albumId)
-		const result = await prisma.album.update({
-			where: {
-				id: albumId
-			},
-			data: {
-				photos: {
-					connect: {
-						id: req.body.photo_id,
-					}
-				}
-			},
+		const album = await addOnePhoto(req.token!.sub, albumId, validatedData.photo_id)
 
-		})
-		res.status(201).send(result)
+		if (!album) {
+			return res.status(404).json({ message: 'Album not found' });
+		}
+
+		res.status(200).send({
+			status: "success",
+			data: null,
+		});
 
 	} catch (err) {
 		debug("Error thrown when creating a album %o: %o", req.body, err)
 		console.error(err)
-		res.status(500).send({ status: "error", message: "Something went wrong" })
+		res.status(500).send({ status: "error", message: "Something went wrong adding the photo to the album" })
 	}
 
 }
@@ -165,23 +163,48 @@ export const albumPostMany = async (req: Request, res: Response) => {
 		const photo_id = validatedData.photo_id;
 
 		// Connect the photos to the album
-		await connectPhotosToAlbum(albumId, photo_id);
+		await connectPhotosToAlbum(req.token!.sub, albumId, photo_id);
 
 		// Return the updated album data
-		res.status(201).json({
+		res.status(200).send({
 			status: "success",
 			data: null,
 		});
 	} catch (error) {
 		console.error(error);
-		res.status(500).json({
+		res.status(500).send({
 			status: "error",
 			message: "Something went wrong",
 		});
 	}
 }
 
+/* export const deletePhoto = async (req: Request, res: Response) => {
+	// Check for any validation errors
+	const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		return res.status(400).send({
+			status: "fail",
+			data: validationErrors.array(),
+		})
+	}
+
+	const validatedData = matchedData(req)
+	try {
+		const albumId = Number(req.params.albumId);
+		const photo_id = validatedData.photo_id;
+
+		await removePhoto(req.token!.sub, albumId, photo_id)
+
+		return res.status(200).send({
+			status: "success",
+			data: null,
+		});
 
 
-
-
+	} catch (err) {
+		console.error(err);
+		res.status(500).send({ message: "Something went wrong" });
+	}
+};
+ */

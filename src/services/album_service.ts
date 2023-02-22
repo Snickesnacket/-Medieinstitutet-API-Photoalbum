@@ -1,6 +1,7 @@
 import prisma from '../prisma'
 import Debug from 'debug'
-import { updateAlbumData } from '../types'
+import { createPhototoAlbumData, updateAlbumData } from '../types'
+import { albumIndex } from '../controllers/album_controller'
 
 const debug = Debug('PHOTOALBUM:album_services')
 /**
@@ -24,10 +25,19 @@ export const getAlbums = async (userId: number) => {
  * Get a single album
  */
 export const getAlbum = async (albumId: number, userId: number) => {
+
+	const user = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+	})
+
+	if (!user) {
+		throw new Error(`User with ID ${userId} not found`)
+	}
 	return await prisma.album.findFirst({
 		where: {
 			id: albumId,
-			user_id: userId
 
 		},
 		include: {
@@ -76,6 +86,17 @@ export const createAlbum = async (userId: number, title: string) => {
  * Update Album
  */
 export const updateAlbum = async (albumId: number, userId: number, userData: updateAlbumData) => {
+
+	const user = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+	})
+
+	if (!user) {
+		throw new Error(`User with ID ${userId} not found`)
+	}
+
 	return await prisma.album.update({
 		where: {
 			id: albumId,
@@ -89,9 +110,46 @@ export const updateAlbum = async (albumId: number, userId: number, userData: upd
 	})
 }
 
+export const addOnePhoto = async (userId: number, albumId: number, photo_id: number) => {
+
+	const user = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+	})
+
+	if (!user) {
+		throw new Error(`User with ID ${userId} not found`)
+	}
+
+	return await prisma.album.update({
+
+		where: {
+			id: albumId
+		},
+		data: {
+			photos: {
+				connect: {
+					id: photo_id,
+				},
+			},
+		},
+	})
+}
 
 
-export async function connectPhotosToAlbum(albumId: number, photo_id: number[]) {
+
+export async function connectPhotosToAlbum(userId: number, albumId: number, photo_id: number[]) {
+
+	const user = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+	})
+
+	if (!user) {
+		throw new Error(`User with ID ${userId} not found`)
+	}
 	return prisma.album.update({
 		where: {
 			id: albumId,
@@ -103,3 +161,34 @@ export async function connectPhotosToAlbum(albumId: number, photo_id: number[]) 
 		},
 	});
 }
+
+/* export const removePhoto = async (userId: number, albumId: number, photoId: number) => {
+
+	const user = await prisma.user.findUnique({
+		where: {
+			id: userId,
+		},
+	})
+
+	if (!user) {
+		throw new Error(`User with ID ${userId} not found`)
+	}
+	return
+	await prisma.photo.delete({
+		where: {
+			id: photoId,
+		},
+	});
+	await prisma.album.update({
+		where: {
+			id: albumId,
+		},
+		data: {
+			_count: {
+				decrement: {
+					photos: 1,
+				},
+			},
+		},
+	}) 
+} */

@@ -2,7 +2,7 @@ import express from "express"
 import { validateToken, validateUser } from '../middlewares/auth/jwt'
 import { registerUserRules, loginUserRules } from '../validations/User_validations'
 import { register, login, refresh } from '../controllers/user_controller'
-import { addphoto, albumIndex, albumPostMany, albumShow, albumStore, albumUpdate } from "../controllers/album_controller"
+import { addphoto, albumIndex, albumPostMany, albumShow, albumStore, albumUpdate, } from "../controllers/album_controller"
 import { photoIndex, photoShow, photoStore, photoUpdate } from "../controllers/photo_controller"
 import { addPhototoAlbum, getUsersPhotos, patchAlbum, PatchPhoto, postAlbums, PostPhoto, postToAlbumsPhotos, } from "../validations/All_validations"
 
@@ -120,8 +120,8 @@ router.post('/albums/:albumId/photos',
 	/**
 	 * DELETE A PHOTO  OF AN ALBUM
 	 */
-	//router.delete('/albums/:albumId/photos',
-	/* 	validateToken,
+	/* router.delete('/albums/:albumId/photos/:photoId',
+		validateToken,
 		validateUser,
 		deletePhoto) */
 
