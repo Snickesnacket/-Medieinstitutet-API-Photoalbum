@@ -98,7 +98,6 @@ export const updateAlbum = async (albumId: number, userId: number, title: string
 	})
 }
 
-
 export const addOnePhoto = async (userId: number, albumId: number, photo_id: number) => {
 
 	const album = await prisma.album.findUnique({
@@ -181,15 +180,14 @@ export const removePhotoFromAlbum = async (userId: number, albumId: number, phot
 	if (album.user_id !== userId) {
 		throw new Error(`User with ID ${userId} is not authorized to add photo to album with ID ${albumId}`);
 	}
-
 	return await prisma.album.update({
-        where: { id: albumId },
-        data: {
-            photos: {
-                disconnect: { id: photoId }
-            }
-        }
-    })
+		where: {
+			id: albumId 
+		}, 
+		data: { photos: { 
+			disconnect: { id: photoId } 
+		} }
+	 })
 
 }
 

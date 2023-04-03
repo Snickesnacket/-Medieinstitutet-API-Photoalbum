@@ -110,6 +110,7 @@ export const photoUpdate = async (req: Request, res: Response) => {
  * Delete a photo
  */
 export const deletePhoto = async (req: Request, res: Response) => {
+    console.log('hej')
     try {
         const photoId = Number(req.params.photoId)
 

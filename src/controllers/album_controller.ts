@@ -184,21 +184,21 @@ export const deletePhotoAlbum = async (req: Request, res: Response) => {
 		})
 	}
 
-	const validatedData = matchedData(req)
 	try {
 		const albumId = Number(req.params.albumId);
+		const photoId = Number(req.params.photoId)
+	
+		console.log(req.token!.sub, albumId, photoId)
 
-
-		await removePhotoFromAlbum(req.token!.sub, albumId, validatedData.photo_id)
+		await removePhotoFromAlbum(req.token!.sub, albumId, photoId)
 
 		return res.status(200).send({
 			status: "success",
 			data: null,
 		});
 
-
 	} catch (err) {
-		console.error(err);
+		console.log('test', err)
 		res.status(500).send({ status: "error", message: "Something went wrong" });
 	}
 };
