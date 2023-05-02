@@ -38,7 +38,7 @@ export const albumShow = async (req: Request, res: Response) => {
 		const album = await getAlbum(req.token!.sub, albumId)
 
 		if (!album) {
-			return res.status(400).send({ status: "fail", message: 'Album not found' });
+			return res.status(404).send({ status: "fail", data: 'Album not found' });
 		}
 
 		res.send({
@@ -48,7 +48,7 @@ export const albumShow = async (req: Request, res: Response) => {
 
 	} catch (err) {
 		debug("Error thrown when finding album with id %o: %o", req.params.albumId, err)
-		return res.status(400).send({ status: "fail", message: "Album Not found" })
+		return res.status(500).send({ status: "error", message: "Something went wrong" })
 	}
 }
 
@@ -58,9 +58,9 @@ export const albumShow = async (req: Request, res: Response) => {
 export const albumStore = async (req: Request, res: Response) => {
 	const validationErrors = validationResult(req)
 	if (!validationErrors.isEmpty()) {
-		return res.status(400).send({
+		return res.status(400).send({ 
 			status: "fail",
-			message: validationErrors.array(),
+			data: validationErrors.array(),
 		})
 	}
 	const validatedData = matchedData(req)
@@ -74,7 +74,7 @@ export const albumStore = async (req: Request, res: Response) => {
 			data: album,
 		})
 	} catch (err) {
-		return res.status(400).send({ status: "fail", message: 'Something went wrong :(' })
+		return res.status(500).send({ status: "error", message: 'Something went wrong :(' })
 	}
 }
 
@@ -100,7 +100,7 @@ export const addphoto = async (req: Request, res: Response) => {
 		const album = await addOnePhoto(req.token!.sub, albumId, validatedData.photo_id);
 
 		if (!album) {
-			return res.status(400).send({ status: "fail", message: 'Album not found' });
+			return res.status(404).send({ status: "fail", data: 'Album not found' });
 		}
 
 		res.status(200).send({
@@ -112,7 +112,7 @@ export const addphoto = async (req: Request, res: Response) => {
 		debug("Error thrown when creating a album %o: %o", req.body, err)
 		console.error(err)
 
-		res.status(400).send({ status: "fail", message: "Something went wrong adding the photo to the album" })
+		res.status(500).send({ status: "error", message: "Something went wrong adding the photo to the album" })
 	}
 }
 /**
@@ -136,7 +136,7 @@ export const albumUpdate = async (req: Request, res: Response) => {
 		res.send({ status: "success", data: userData })
 
 	} catch (err) {
-		return res.status(400).send({ message: "Something went wrong" })
+		return res.status(500).send({ status: "error", message: "Something went wrong" })
 	}
 }
 
@@ -167,8 +167,8 @@ export const albumPostMany = async (req: Request, res: Response) => {
 			data: null,
 		});
 	} catch (error) {
-		res.status(400).send({
-			status: "fail",
+		res.status(500).send({
+			status: "error",
 			message: "Something went wrong",
 		});
 	}

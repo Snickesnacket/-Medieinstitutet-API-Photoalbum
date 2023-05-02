@@ -185,7 +185,8 @@ export const removePhotoFromAlbum = async (userId: number, albumId: number, phot
 			id: albumId 
 		}, 
 		data: { photos: { 
-			disconnect: { id: photoId } 
+			disconnect: { 
+				id: photoId } 
 		} }
 	 })
 

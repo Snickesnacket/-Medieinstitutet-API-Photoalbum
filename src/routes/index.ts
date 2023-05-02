@@ -5,7 +5,6 @@ import { register, login, refresh } from '../controllers/user_controller'
 import albums from "./albums"
 import photos from "./photos"
 
-
 // instantiate a new router
 const router = express.Router()
 

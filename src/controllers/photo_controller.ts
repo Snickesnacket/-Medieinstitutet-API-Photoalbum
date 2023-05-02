@@ -34,7 +34,7 @@ export const photoShow = async (req: Request, res: Response) => {
         const photo = await getPhoto(photoId, req.token!.sub)
 
         if (!photo) {
-            return res.status(400).send({ message: 'Photo not found' });
+            return res.status(404).send({status: "fail", data: "Photo not found" });
         }
 
         res.send({
@@ -44,7 +44,7 @@ export const photoShow = async (req: Request, res: Response) => {
 
     } catch (err) {
         debug("Error thrown when finding photo with id %o: %o", req.params.photoId, err)
-        return res.status(400).send({ status: "error", message: "Photo Not found" })
+        return res.status(500).send({ status: "error", message: "Photo Not found" })
     }
 }
 
@@ -57,7 +57,7 @@ export const photoStore = async (req: Request, res: Response) => {
     if (!validationErrors.isEmpty()) {
         return res.status(400).send({
             status: "fail",
-            message: validationErrors.array(),
+            data: validationErrors.array(),
         });
     }
 
@@ -71,7 +71,7 @@ export const photoStore = async (req: Request, res: Response) => {
         });
     } catch (err) {
         console.error(err);
-        return res.status(400).send({ status: "fail", message: 'Internal server error' });
+        return res.status(500).send({ status: "error", message: 'Internal server error' });
     }
 };
 
@@ -102,7 +102,7 @@ export const photoUpdate = async (req: Request, res: Response) => {
         res.send({ status: "success", data: userData })
 
     } catch (err) {
-        return res.status(400).send({ status: "fail", message: "Something went wrong" })
+        return res.status(500).send({ status: "error", message: "Something went wrong" })
     }
 }
 
@@ -110,7 +110,6 @@ export const photoUpdate = async (req: Request, res: Response) => {
  * Delete a photo
  */
 export const deletePhoto = async (req: Request, res: Response) => {
-    console.log('hej')
     try {
         const photoId = Number(req.params.photoId)
 
