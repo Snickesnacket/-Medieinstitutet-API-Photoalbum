@@ -1,10 +1,10 @@
-# Photoalbum
+Photoalbum
 https://unusual-housecoat-jay.cyclic.app/
- 
- ##Betyg: VG 
-## Om uppgiften 
 
-# Hygienkrav
+##Betyg: VG
+
+Om uppgiften
+Hygienkrav
 Nedan hygienkrav ska vara uppfyllda oavsett betygsnivå.
 
 All källkod ska vara skriven av dig själv
@@ -31,20 +31,13 @@ All källkod vara korrekt indenterad (så klart!)
 
 Publicerad på Cyclic/Clever Cloud
 
-##Kravspecifikation
-Obs! En användare ska bara kunna se sina egna album och foton, och enbart kunna lägga till sina egna foton i sina egna album.
+##Kravspecifikation Obs! En användare ska bara kunna se sina egna album och foton, och enbart kunna lägga till sina egna foton i sina egna album.
 
- 
-
-#Användare
-Registrera nytt konto
+#Användare Registrera nytt konto
 
 VG: Logga in för att få en JWT-token
 
- 
-
-#Foton
-Lista sina foton
+#Foton Lista sina foton
 
 Skapa ett nytt foto
 
@@ -52,10 +45,7 @@ Uppdatera ett foto
 
 VG: Radera ett foto (raderar även eventuella kopplingar mellan fotot och album som fotot finns i)
 
- 
-
-#Album
-Lista sina album
+#Album Lista sina album
 
 Skapa nya album
 
@@ -63,10 +53,7 @@ Uppdatera ett album
 
 VG: Radera ett album (raderar även eventuella kopplingar mellan albumet och fotona som finns i albumet)
 
- 
-
-#Album > Foton
-Lista foton i ett album
+#Album > Foton Lista foton i ett album
 
 Lägga till foto i ett album
 
@@ -74,10 +61,7 @@ VG: Lägga till flera foton i ett album
 
 VG: Ta bort ett foto från ett album
 
- 
-
-#Kravspecifikation Väl Godkänt
-Använder JWT istället för HTTP Basic Auth
+#Kravspecifikation Väl Godkänt Använder JWT istället för HTTP Basic Auth
 
 Kan radera ett foto (tar även bort eventuella länkar mellan fotot och album)
 
@@ -86,5 +70,4 @@ Kan radera ett album (tar även bort eventuella länkar mellan albumet och foton
 Kan lägga till flera foto samtidigt till ett album
 
 Kan ta bort ett foto från ett album
-
  
