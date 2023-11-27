@@ -1,73 +1,143 @@
-Photoalbum
-https://unusual-housecoat-jay.cyclic.app/
+# Medieinstitutet-API-Bortakvall
 
-##Betyg: VG
+## Betyg: G
 
-Om uppgiften
-Hygienkrav
+## Express, Prisma, Typescript, CRUD, MySQL
+
+Ladda ner och: 
+1. Kör `npm install`
+2. Kopiera `.env.example` till `.env` 
+3. Ladda ner och installera mamp och ställ in till MySQL
+4. Kör `npm install -g env-cmd`
+5. Kör `npx prisma migrate dev` 
+6. Kör `npm run build` 
+7. Kör `npm run start` 
+
+
+
+## Uppgiftsbeskrivning
+
+Bedömningskriterier
+På denna uppgiften kan ni få IG/G
+
+# Om uppgiften 
+Varje student jobbar enskilt med att skapa en backend för Bortakväll som ska fungera som en ren “drop-in replacement”. 
+
+# Man kan bara få godkänt på uppgiften!
+
+
+# Hygienkrav
 Nedan hygienkrav ska vara uppfyllda oavsett betygsnivå.
-
-All källkod ska vara skriven av dig själv
 
 Använder Express och Prisma
 
 Vara skriven i TypeScript
 
-Följa REST, CRUD och Resource Controller mönster
+Följa CRUD och Resource Controller mönster
+
+Validering av inkommande data
 
 Alla svar följer jSend-specifikationen
 
-Autentisering via HTTP Basic/JWT med hashing/salting av lösenord via bcrypt
+Publicerad (plattform TBD)
 
-Validering av samtlig inkommande data
 
-Följer angiven specifikation av endpoints (såväl http-metod som path, request och response)
+# Man ska kunna:
 
-Felhantering (t.ex. om användaren försöker komma åt en annan användares album eller foton, eller om användaren försöker lägga till ett foto som inte tillhör användaren i ett album, eller lägga till ett foto i ett album som inte finns)
+Hämta alla produkter
+Hämta en enskild produkt
+Skapa en ny produkt
+Hämta alla ordrar
+Hämta en enskild order (samt dess OrderItems)
+Skapa en ny order (samt dess OrderItems)
+Grundläggande validering av produktdetaljer och kundinformationen ska ske.
+Fel i valideringen ska (precis som allting annat) returneras enligt jSend-format, men behöver för övrigt inte matcha hur Bortakväll-API:et returnerade valideringsfel.
 
-Använder korrekta HTTP-statuskoder
-
-All källkod vara korrekt indenterad (så klart!)
-
-Publicerad på Cyclic/Clever Cloud
-
-##Kravspecifikation Obs! En användare ska bara kunna se sina egna album och foton, och enbart kunna lägga till sina egna foton i sina egna album.
-
-#Användare Registrera nytt konto
-
-VG: Logga in för att få en JWT-token
-
-#Foton Lista sina foton
-
-Skapa ett nytt foto
-
-Uppdatera ett foto
-
-VG: Radera ett foto (raderar även eventuella kopplingar mellan fotot och album som fotot finns i)
-
-#Album Lista sina album
-
-Skapa nya album
-
-Uppdatera ett album
-
-VG: Radera ett album (raderar även eventuella kopplingar mellan albumet och fotona som finns i albumet)
-
-#Album > Foton Lista foton i ett album
-
-Lägga till foto i ett album
-
-VG: Lägga till flera foton i ett album
-
-VG: Ta bort ett foto från ett album
-
-#Kravspecifikation Väl Godkänt Använder JWT istället för HTTP Basic Auth
-
-Kan radera ett foto (tar även bort eventuella länkar mellan fotot och album)
-
-Kan radera ett album (tar även bort eventuella länkar mellan albumet och foton)
-
-Kan lägga till flera foto samtidigt till ett album
-
-Kan ta bort ett foto från ett album
  
+
+# Models
+# Product
+id
+
+name (string)
+
+description (text)
+
+price (integer, min 1)
+
+images (json)
+
+stock_status (string)
+
+stock_quantity (integer, min 0)
+
+Följande fält behövs inte (men det är helt okej att ha dem)
+
+on_sale
+En Product har flera OrderItem.
+
+ 
+
+# Order
+id
+
+customer_first_name (string)
+
+customer_last_name (string)
+
+customer_address (string)
+
+customer_postcode (string, max 6)
+
+customer_city (string)
+
+customer_email (email)
+
+customer_phone (optional)
+
+order_total (integer, min 1)
+
+Följande fält behövs inte (men det är helt okej att ha dem)
+
+order_date
+
+created_at
+
+updated_at
+
+En Order har flera OrderItems.
+
+
+# OrderItems
+product_id (integer, min 1)
+
+qty (integer, min 1)
+
+item_price (integer, min 1)
+
+item_total (integer, min 1)
+
+En OrderItem tillhör en Order.
+
+En OrderItem tillhör en Product.
+
+# Endpoints
+# GET /products
+Returnerar alla produkter 
+
+# GET /products/:productId
+Returnerar en enskild produkt.
+
+# POST /products
+Skapar en ny produkt.
+Returnerar den skapade produkten.
+
+# GET /orders
+Returnerar alla ordrar (OrderItems exkluderat).
+
+# GET /orders/:orderId
+Returnerar en enskild order, inkl. dess OrderItems.
+
+# POST /orders
+Skapar en ny order.
+Returnerar den skapade ordern.
