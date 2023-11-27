@@ -1,143 +1,90 @@
-# Medieinstitutet-API-Bortakvall
+# Medieinstitutet-API-Photoalbum
 
-## Betyg: G
+## Betyg: VG
 
 ## Express, Prisma, Typescript, CRUD, MySQL
 
-Ladda ner och: 
-1. Kör `npm install`
-2. Kopiera `.env.example` till `.env` 
-3. Ladda ner och installera mamp och ställ in till MySQL
-4. Kör `npm install -g env-cmd`
-5. Kör `npx prisma migrate dev` 
-6. Kör `npm run build` 
-7. Kör `npm run start` 
-
-
-
-## Uppgiftsbeskrivning
-
-Bedömningskriterier
-På denna uppgiften kan ni få IG/G
-
-# Om uppgiften 
-Varje student jobbar enskilt med att skapa en backend för Bortakväll som ska fungera som en ren “drop-in replacement”. 
-
-# Man kan bara få godkänt på uppgiften!
-
-
 # Hygienkrav
 Nedan hygienkrav ska vara uppfyllda oavsett betygsnivå.
+
+All källkod ska vara skriven av dig själv
 
 Använder Express och Prisma
 
 Vara skriven i TypeScript
 
-Följa CRUD och Resource Controller mönster
-
-Validering av inkommande data
+Följa REST, CRUD och Resource Controller mönster
 
 Alla svar följer jSend-specifikationen
 
-Publicerad (plattform TBD)
+Autentisering via HTTP Basic/JWT med hashing/salting av lösenord via bcrypt
 
+Validering av samtlig inkommande data
 
-# Man ska kunna:
+Följer angiven specifikation av endpoints (såväl http-metod som path, request och response)
 
-Hämta alla produkter
-Hämta en enskild produkt
-Skapa en ny produkt
-Hämta alla ordrar
-Hämta en enskild order (samt dess OrderItems)
-Skapa en ny order (samt dess OrderItems)
-Grundläggande validering av produktdetaljer och kundinformationen ska ske.
-Fel i valideringen ska (precis som allting annat) returneras enligt jSend-format, men behöver för övrigt inte matcha hur Bortakväll-API:et returnerade valideringsfel.
+Felhantering (t.ex. om användaren försöker komma åt en annan användares album eller foton, eller om användaren försöker lägga till ett foto som inte tillhör användaren i ett album, eller lägga till ett foto i ett album som inte finns)
 
- 
+Använder korrekta HTTP-statuskoder
 
-# Models
-# Product
-id
+All källkod vara korrekt indenterad (så klart!)
 
-name (string)
+Publicerad på Cyclic/Clever Cloud
 
-description (text)
-
-price (integer, min 1)
-
-images (json)
-
-stock_status (string)
-
-stock_quantity (integer, min 0)
-
-Följande fält behövs inte (men det är helt okej att ha dem)
-
-on_sale
-En Product har flera OrderItem.
+##Kravspecifikation
+Obs! En användare ska bara kunna se sina egna album och foton, och enbart kunna lägga till sina egna foton i sina egna album.
 
  
 
-# Order
-id
+#Användare
+Registrera nytt konto
 
-customer_first_name (string)
+VG: Logga in för att få en JWT-token
 
-customer_last_name (string)
+ 
 
-customer_address (string)
+#Foton
+Lista sina foton
 
-customer_postcode (string, max 6)
+Skapa ett nytt foto
 
-customer_city (string)
+Uppdatera ett foto
 
-customer_email (email)
+VG: Radera ett foto (raderar även eventuella kopplingar mellan fotot och album som fotot finns i)
 
-customer_phone (optional)
+ 
 
-order_total (integer, min 1)
+#Album
+Lista sina album
 
-Följande fält behövs inte (men det är helt okej att ha dem)
+Skapa nya album
 
-order_date
+Uppdatera ett album
 
-created_at
+VG: Radera ett album (raderar även eventuella kopplingar mellan albumet och fotona som finns i albumet)
 
-updated_at
+ 
 
-En Order har flera OrderItems.
+#Album > Foton
+Lista foton i ett album
 
+Lägga till foto i ett album
 
-# OrderItems
-product_id (integer, min 1)
+VG: Lägga till flera foton i ett album
 
-qty (integer, min 1)
+VG: Ta bort ett foto från ett album
 
-item_price (integer, min 1)
+ 
 
-item_total (integer, min 1)
+#Kravspecifikation Väl Godkänt
+Använder JWT istället för HTTP Basic Auth
 
-En OrderItem tillhör en Order.
+Kan radera ett foto (tar även bort eventuella länkar mellan fotot och album)
 
-En OrderItem tillhör en Product.
+Kan radera ett album (tar även bort eventuella länkar mellan albumet och foton)
 
-# Endpoints
-# GET /products
-Returnerar alla produkter 
+Kan lägga till flera foto samtidigt till ett album
 
-# GET /products/:productId
-Returnerar en enskild produkt.
+Kan ta bort ett foto från ett album
 
-# POST /products
-Skapar en ny produkt.
-Returnerar den skapade produkten.
-
-# GET /orders
-Returnerar alla ordrar (OrderItems exkluderat).
-
-# GET /orders/:orderId
-Returnerar en enskild order, inkl. dess OrderItems.
-
-# POST /orders
-Skapar en ny order.
-Returnerar den skapade ordern.
+ 
